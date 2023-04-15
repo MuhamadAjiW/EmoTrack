@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import RiwayatTidurStatisticUserInterface
 
 
 class Ui_Form(object):
@@ -195,6 +196,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        self.set_statistic_form(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -220,7 +222,19 @@ class Ui_Form(object):
         self.label_14.setText(_translate("Form", "TextLabel"))
         self.label_15.setText(_translate("Form", "TextLabel"))
 
+    def set_statistic_form(self, Form):
+        self.StatisticForm = QtWidgets.QWidget()
+        self.StatisticForm.setObjectName("Form")
+        self.StatisticForm.resize(1280, 786)
+        self.StatisticUI = RiwayatTidurStatisticUserInterface.Ui_Form()
+        self.StatisticUI.setupUi(self.StatisticForm)
+        self.StatisticUI.set_main_form(Form)
+        self.StatisticsButton.clicked.connect(lambda : self.statistic_button(Form, self.StatisticForm))
 
+    def statistic_button(self, Form, StatisticForm):
+        Form.hide()
+        StatisticForm.show()
+        
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

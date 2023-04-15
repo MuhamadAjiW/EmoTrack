@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import RiwayatTidurUserInterface
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -167,6 +167,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        self.Form = Form
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -189,6 +190,14 @@ class Ui_Form(object):
         self.progressBar_4.setFormat(_translate("Form", "%p%"))
         self.progressBar_5.setFormat(_translate("Form", "%p%"))
         self.progressBar_6.setFormat(_translate("Form", "%p%"))
+        
+    def set_main_form(self, MainForm):
+        self.MainForm = MainForm
+        self.StatisticsButton.clicked.connect(lambda : self.statistic_button(self.Form, self.MainForm))
+        
+    def statistic_button(self, Form, MainForm):
+        Form.hide()
+        MainForm.show()
 
 
 if __name__ == "__main__":
