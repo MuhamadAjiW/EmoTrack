@@ -248,10 +248,10 @@ QPushButton:pressed {
      <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
-        <x>1100</x>
+        <x>1080</x>
         <y>10</y>
-        <width>101</width>
-        <height>111</height>
+        <width>121</width>
+        <height>121</height>
        </rect>
       </property>
       <property name="font">
@@ -285,7 +285,7 @@ QPushButton:pressed {
          <rect>
           <x>50</x>
           <y>0</y>
-          <width>91</width>
+          <width>111</width>
           <height>31</height>
          </rect>
         </property>
@@ -308,8 +308,8 @@ QPushButton:pressed {
         <rect>
          <x>0</x>
          <y>30</y>
-         <width>101</width>
-         <height>81</height>
+         <width>121</width>
+         <height>91</height>
         </rect>
        </property>
        <property name="font">
