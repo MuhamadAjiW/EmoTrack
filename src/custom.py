@@ -11,7 +11,7 @@ class UIWindow(object):
         super(UIWindow).__init__()
         self.signals = mainSignals()
 
-    def setupUi(self, Form, abspath) -> None:
+    def setupUi(self, Form) -> None:
         """Displays Window"""
         pass
 
