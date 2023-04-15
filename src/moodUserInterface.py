@@ -319,7 +319,14 @@ class Ui_Form(object):
         self.progress_bar_7.setValue(0)
         self.progress_bar_8.setValue(0)
         
+        # set current mood if exist
         conn = sqlite3.connect("database.db")
+        mood_sekarang = conn.execute("SELECT mood FROM mood WHERE date = ?", (self.label_tanggal.text(),)).fetchone()
+        
+        if mood_sekarang is not None:
+            self.label_mood_sekarang.setText(mood_sekarang[0])
+            
+        # set progress bar
         cursor = conn.execute(''' 
                                 SELECT mood, COUNT(mood) 
                                 FROM (
