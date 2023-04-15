@@ -7,24 +7,23 @@ from JurnalUserInterface import *
 from os import path
 
 class UserInterface(QMainWindow):
-    def __init__(self, abspath, startView: UIWindow, views: dict, parent=None):
+    def __init__(self, startView: UIWindow, views: dict, parent=None):
         super(UserInterface, self).__init__(parent)
         self.setObjectName("UI Controller")
         self.resize(1280, 786)
 
         self.displays = views
-        self.abspath = abspath
         self.view = QFrame(self)
         self.currentUI = startView
 
         startView.signals.switch.connect(self.test)
-        startView.setupUi(self.view, self.abspath)
+        startView.setupUi(self.view)
         self.setCentralWidget(self.view)
 
     def switchWindow(self, window: UIWindow):
         del self.view
         self.view = QFrame(self)
-        window.setupUi(self.view, self.abspath)
+        window.setupUi(self.view)
         self.currentUI = self.view
         self.setCentralWidget(self.view)
 
@@ -50,7 +49,7 @@ if __name__ == "__main__":
         "Sleep": JournalUi,
         "Quotes": JournalUi,
     }
-    mainWindow = UserInterface(abspath, HomeUi, UiDict)
+    mainWindow = UserInterface(HomeUi, UiDict)
 
     mainWindow.show()
     sys.exit(app.exec_())
