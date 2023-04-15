@@ -13,7 +13,6 @@ class UserInterface(QMainWindow):
         self.resize(1280, 786)
 
         self.displays = views
-        self.abspath = abspath
         self.view = QFrame(self)
         self.currentUI = startView
 
