@@ -3,15 +3,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from custom import *
 from os import path
+import sys
 
 class overlaySignals(QObject):
     close = pyqtSignal()
 
-class mainSignals(QObject):
-    close = pyqtSignal()
-
 class customOverlay(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, abspath, parent=None):
         super(customOverlay, self).__init__(parent)
 
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -68,21 +66,21 @@ class customOverlay(QWidget):
         self.signals.close.emit()
 
 
-class Ui_HomeWindow(object):
-    def setupUi(self, HomeWindow, abspath):
-        HomeWindow.setObjectName("Home")
-        HomeWindow.resize(1280, 786)
+class homeForm(UIWindow):
+    def setupUi(self, Form, abspath):
+        self.parent = Form
+        self.abspath = abspath
 
-        self.centralwidget = QFrame(HomeWindow)
-        self.centralwidget.setObjectName("stackedwidget")
+        Form.setObjectName("Home")
+        Form.resize(1280, 786)
 
-        self.horizontalLayout = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName("horizontalLayout")
 
-        self.OpeningPanel = QFrame(self.centralwidget)
+        self.OpeningPanel = QFrame(Form)
         self.OpeningPanel.setStyleSheet("QPushButton {\n"
 "    background: rgb(240, 240, 240);\n"
 "    border: 2px solid rgb(130, 130, 130);\n"
@@ -136,22 +134,22 @@ class Ui_HomeWindow(object):
         self.MoodButton.setGeometry(QRect(30, 600, 40, 40))
         self.MoodButton.setObjectName("MoodButton")
         self.MoodButton
-        #TODO: self.MoodButton.clicked.connect()
+        self.MoodButton.clicked.connect(lambda: self._onswitch("Mood"))
 
         self.JournalButton = customSVGButton(path.join(abspath, "Resource/journalIcon.svg"), path.join(abspath, "Resource/journalIconH.svg"), self.OpeningPanel)
         self.JournalButton.setGeometry(QRect(80, 600, 40, 40))
         self.JournalButton.setObjectName("JournalButton")
-        #TODO: self.MoodButton.clicked.connect()
+        self.JournalButton.clicked.connect(lambda: self._onswitch("Journal"))
 
         self.SleepButton = customSVGButton(path.join(abspath, "Resource/sleepIcon.svg"), path.join(abspath, "Resource/sleepIconH.svg"), self.OpeningPanel)
         self.SleepButton.setGeometry(QRect(130, 600, 40, 40))
         self.SleepButton.setObjectName("SleepButton")
-        #TODO: self.SleepButton.clicked.connect()
+        self.SleepButton.clicked.connect(lambda: self._onswitch("Sleep"))
         
         self.QuotesButton = customSVGButton(path.join(abspath, "Resource/quoteIcon.svg"), path.join(abspath, "Resource/quoteIconH.svg"), self.OpeningPanel)
         self.QuotesButton.setGeometry(QRect(180, 600, 40, 40))
         self.QuotesButton.setObjectName("QuotesButton")
-        #TODO: self.QuotesButton.clicked.connect()
+        self.QuotesButton.clicked.connect(lambda: self._onswitch("Quotes"))
 
         self.ChangeName = customSVGButton(path.join(abspath, "Resource/nameIcon.svg"), path.join(abspath, "Resource/nameIconH.svg"), self.OpeningPanel)
         self.ChangeName.setGeometry(QRect(250, 70, 30, 30))
@@ -160,7 +158,7 @@ class Ui_HomeWindow(object):
 
         self.horizontalLayout.addWidget(self.OpeningPanel)
 
-        self.ImagePanel = QFrame(self.centralwidget)
+        self.ImagePanel = QFrame(Form)
         self.ImagePanel.setFrameShape(QFrame.StyledPanel)
         self.ImagePanel.setLineWidth(6)
         self.ImagePanel.setObjectName("ImagePanel")
@@ -172,25 +170,24 @@ class Ui_HomeWindow(object):
         self.horizontalLayout.setStretch(0, 1)
         self.horizontalLayout.setStretch(1, 3)
 
-        HomeWindow.setCentralWidget(self.centralwidget)
+        self.retranslateUi(Form)
+        QMetaObject.connectSlotsByName(Form)
 
-        self.retranslateUi(HomeWindow)
-        QMetaObject.connectSlotsByName(HomeWindow)
-
-
-    def retranslateUi(self, HomeWindow):
+    def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
-        HomeWindow.setWindowTitle(_translate("HomeWindow", "Home"))
-        self.OpeningQuotes.setText(_translate("HomeWindow", "Di dalam kesulitan pasti ada\n"
+        Form.setWindowTitle(_translate("Form", "Home"))
+        self.OpeningQuotes.setText(_translate("Form", "Di dalam kesulitan pasti ada\n"
 "kemudahan"))
-        self.NameLabel.setText(_translate("HomeWindow", "Hai Sayang"))
+        self.NameLabel.setText(_translate("Form", "Hai Sayang"))
         self.QuitButton.setText(_translate("Form", "Keluar"))
 
+    def _onswitch(self, dest):
+        self.signals.switch.emit(dest)
 
     def _onpopup(self):
-        self.popup = customOverlay(self.centralwidget)
+        self.popup = customOverlay(self.abspath, self.parent)
         self.popup.move(0, 0)
-        self.popup.resize(HomeWindow.width(), HomeWindow.height())
+        self.popup.resize(self.parent.width(), self.parent.height())
         self.popup.signals.close.connect(self._closepopup)
         self.popup.show()
 
@@ -199,16 +196,14 @@ class Ui_HomeWindow(object):
 
 
 if __name__ == "__main__":
-    import sys
     abspath = path.dirname(path.abspath(__file__))
     app = QApplication(sys.argv)
     
     _id = QFontDatabase.addApplicationFont(path.join(abspath, "Resource/Helvetica/Helvetica.ttf"))    
 
-    HomeWindow = QMainWindow()
-    ui = Ui_HomeWindow()
-    ui.setupUi(HomeWindow, abspath)
-    HomeWindow.resizeEvent
+    Widget = QWidget()
+    ui = homeForm()
+    ui.setupUi(Widget, abspath)
 
-    HomeWindow.show()
+    Widget.show()
     sys.exit(app.exec_())

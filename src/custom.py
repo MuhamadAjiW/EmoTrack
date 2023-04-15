@@ -3,6 +3,18 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtSvg import *
 
+class mainSignals(QObject):
+    switch = pyqtSignal(object)
+    
+class UIWindow(object):
+    def __init__(self):
+        super(UIWindow).__init__()
+        self.signals = mainSignals()
+
+    def setupUi(self, Form, abspath) -> None:
+        """Displays Window"""
+        pass
+
 class customSVGImage(QLabel):
     def __init__(self, resource: str, parent=None):
         super(customSVGImage, self).__init__(parent)
@@ -11,8 +23,6 @@ class customSVGImage(QLabel):
     def paintEvent(self, event):
         painter = QPainter(self)
         self.renderer.render(painter)
-        
-
     
 class customSVGButton(QAbstractButton):
     def __init__(self, resource: str, resourceHL: str, parent=None):
