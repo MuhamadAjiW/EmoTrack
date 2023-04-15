@@ -141,7 +141,7 @@ QPushButton:pressed {
        <string>:)</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button7">
+     <widget class="QPushButton" name="button6">
       <property name="geometry">
        <rect>
         <x>90</x>
@@ -206,7 +206,7 @@ QPushButton:pressed {
        <string>:'</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button8">
+     <widget class="QPushButton" name="button7">
       <property name="geometry">
        <rect>
         <x>150</x>
@@ -219,7 +219,7 @@ QPushButton:pressed {
        <string>:|</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button6">
+     <widget class="QPushButton" name="button8">
       <property name="geometry">
        <rect>
         <x>210</x>
@@ -363,7 +363,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1">
+     <widget class="QProgressBar" name="progress_bar_1">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -376,7 +376,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_9">
+     <widget class="QLabel" name="label_mood_2">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -395,7 +395,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_2">
+     <widget class="QProgressBar" name="progress_bar_2">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -408,7 +408,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_4">
+     <widget class="QLabel" name="label_mood_3">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -427,7 +427,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_5">
+     <widget class="QProgressBar" name="progress_bar_3">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -440,7 +440,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_6">
+     <widget class="QProgressBar" name="progress_bar_4">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -453,7 +453,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_11">
+     <widget class="QLabel" name="label_mood_4">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -472,7 +472,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_7">
+     <widget class="QProgressBar" name="progress_bar_7">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -485,7 +485,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_12">
+     <widget class="QLabel" name="label_mood_8">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -504,7 +504,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_5">
+     <widget class="QLabel" name="label_mood_7">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -523,7 +523,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_6">
+     <widget class="QLabel" name="label_mood_5">
       <property name="geometry">
        <rect>
         <x>360</x>
@@ -542,7 +542,7 @@ QPushButton:pressed {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_8">
+     <widget class="QProgressBar" name="progress_bar_8">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -555,7 +555,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_9">
+     <widget class="QProgressBar" name="progress_bar_5">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -568,7 +568,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QProgressBar" name="progress_bar1_10">
+     <widget class="QProgressBar" name="progress_bar_6">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -581,7 +581,7 @@ QPushButton:pressed {
        <number>24</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label_mood_13">
+     <widget class="QLabel" name="label_mood_6">
       <property name="geometry">
        <rect>
         <x>360</x>
