@@ -9,6 +9,7 @@
 
 
 import datetime
+import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -143,7 +144,7 @@ class Ui_Form(object):
         self.label_mood_1.setObjectName("label_mood_1")
         self.progress_bar_1 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_1.setGeometry(QtCore.QRect(420, 70, 601, 41))
-        self.progress_bar_1.setProperty("value", 1)
+        self.progress_bar_1.setProperty("value", 0)
         self.progress_bar_1.setObjectName("progress_bar_1")
         self.label_mood_2 = QtWidgets.QLabel(self.OpeningPanel)
         self.label_mood_2.setGeometry(QtCore.QRect(360, 130, 41, 41))
@@ -152,7 +153,7 @@ class Ui_Form(object):
         self.label_mood_2.setObjectName("label_mood_2")
         self.progress_bar_2 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_2.setGeometry(QtCore.QRect(420, 130, 601, 41))
-        self.progress_bar_2.setProperty("value", 2)
+        self.progress_bar_2.setProperty("value", 0)
         self.progress_bar_2.setObjectName("progress_bar_2")
         self.label_mood_3 = QtWidgets.QLabel(self.OpeningPanel)
         self.label_mood_3.setGeometry(QtCore.QRect(360, 190, 41, 41))
@@ -161,11 +162,11 @@ class Ui_Form(object):
         self.label_mood_3.setObjectName("label_mood_3")
         self.progress_bar_3 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_3.setGeometry(QtCore.QRect(420, 190, 601, 41))
-        self.progress_bar_3.setProperty("value", 3)
+        self.progress_bar_3.setProperty("value", 0)
         self.progress_bar_3.setObjectName("progress_bar_3")
         self.progress_bar_4 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_4.setGeometry(QtCore.QRect(420, 250, 601, 41))
-        self.progress_bar_4.setProperty("value", 4)
+        self.progress_bar_4.setProperty("value", 0)
         self.progress_bar_4.setObjectName("progress_bar_4")
         self.label_mood_4 = QtWidgets.QLabel(self.OpeningPanel)
         self.label_mood_4.setGeometry(QtCore.QRect(360, 250, 41, 41))
@@ -174,7 +175,7 @@ class Ui_Form(object):
         self.label_mood_4.setObjectName("label_mood_4")
         self.progress_bar_7 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_7.setGeometry(QtCore.QRect(420, 430, 601, 41))
-        self.progress_bar_7.setProperty("value", 7)
+        self.progress_bar_7.setProperty("value", 0)
         self.progress_bar_7.setObjectName("progress_bar_7")
         self.label_mood_8 = QtWidgets.QLabel(self.OpeningPanel)
         self.label_mood_8.setGeometry(QtCore.QRect(360, 490, 41, 41))
@@ -193,15 +194,15 @@ class Ui_Form(object):
         self.label_mood_5.setObjectName("label_mood_5")
         self.progress_bar_8 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_8.setGeometry(QtCore.QRect(420, 490, 601, 41))
-        self.progress_bar_8.setProperty("value", 8)
+        self.progress_bar_8.setProperty("value", 0)
         self.progress_bar_8.setObjectName("progress_bar_8")
         self.progress_bar_5 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_5.setGeometry(QtCore.QRect(420, 310, 601, 41))
-        self.progress_bar_5.setProperty("value", 5)
+        self.progress_bar_5.setProperty("value", 0)
         self.progress_bar_5.setObjectName("progress_bar_5")
         self.progress_bar_6 = QtWidgets.QProgressBar(self.OpeningPanel)
         self.progress_bar_6.setGeometry(QtCore.QRect(420, 370, 601, 41))
-        self.progress_bar_6.setProperty("value", 6)
+        self.progress_bar_6.setProperty("value", 0)
         self.progress_bar_6.setObjectName("progress_bar_6")
         self.label_mood_6 = QtWidgets.QLabel(self.OpeningPanel)
         self.label_mood_6.setGeometry(QtCore.QRect(360, 370, 41, 41))
@@ -222,34 +223,41 @@ class Ui_Form(object):
     # Press button 1
     def press_button1(self):
         self.label_mood_sekarang.setText(":)")
-        
+        self.insertDB()
     # Press button 2
     def press_button2(self):
         self.label_mood_sekarang.setText(":(")
+        self.insertDB()
         
     # Press button 3
     def press_button3(self):
         self.label_mood_sekarang.setText(":\'")
+        self.insertDB()
     
     # Press button 4
     def press_button4(self):
         self.label_mood_sekarang.setText(":v")
+        self.insertDB()
         
     # Press button 5
     def press_button5(self):
         self.label_mood_sekarang.setText(":D")
+        self.insertDB()
         
     # Press button 6
     def press_button6(self):
         self.label_mood_sekarang.setText(":3")
+        self.insertDB()
         
     # Press button 7
     def press_button7(self):
         self.label_mood_sekarang.setText(":|")
+        self.insertDB()
         
     # Press button 8
     def press_button8(self):
         self.label_mood_sekarang.setText(":\\")
+        self.insertDB()
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -282,13 +290,81 @@ class Ui_Form(object):
         self.label_mood_5.setText(_translate("Form", ":D"))
         self.label_mood_6.setText(_translate("Form", ":3"))
         self.label_deskripsi_3.setText(_translate("Form", "hari ini?"))
-
+        
+    def createSchema(self):
+        conn = sqlite3.connect("database.db")
+        conn.execute("CREATE TABLE IF NOT EXISTS mood (id INTEGER PRIMARY KEY AUTOINCREMENT, mood TEXT, date TEXT)")
+        conn.commit()
+        conn.close()
+        
+    def insertDB(self):
+        conn = sqlite3.connect("database.db")
+        exist = conn.execute("SELECT * FROM mood WHERE date = ?", (self.label_tanggal.text(),))
+        if exist.fetchone() is None:
+            conn.execute("INSERT INTO mood (mood, date) VALUES (?, ?)", (self.label_mood_sekarang.text(), self.label_tanggal.text()))
+        else:
+            conn.execute("UPDATE mood SET mood = ? WHERE date = ?", (self.label_mood_sekarang.text(), self.label_tanggal.text()))
+        conn.commit()
+        conn.close()
+        self.readDB()
+    
+    def readDB(self):
+        # initiate progress bar
+        self.progress_bar_1.setValue(0)
+        self.progress_bar_2.setValue(0)
+        self.progress_bar_3.setValue(0)
+        self.progress_bar_4.setValue(0)
+        self.progress_bar_5.setValue(0)
+        self.progress_bar_6.setValue(0)
+        self.progress_bar_7.setValue(0)
+        self.progress_bar_8.setValue(0)
+        
+        # set current mood if exist
+        conn = sqlite3.connect("database.db")
+        mood_sekarang = conn.execute("SELECT mood FROM mood WHERE date = ?", (self.label_tanggal.text(),)).fetchone()
+        
+        if mood_sekarang is not None:
+            self.label_mood_sekarang.setText(mood_sekarang[0])
+            
+        # set progress bar
+        cursor = conn.execute(''' 
+                                SELECT mood, COUNT(mood) 
+                                FROM (
+                                    SELECT mood 
+                                    FROM mood 
+                                    ORDER BY date DESC 
+                                    LIMIT 30
+                                ) AS subquery
+                                GROUP BY mood
+                            ''')
+        cnt_data = min(conn.execute("SELECT COUNT(*) FROM mood").fetchone()[0], 30)
+        
+        for row in cursor:
+            if(row[0] == ":)"):
+                self.progress_bar_1.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":("):
+                self.progress_bar_2.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":\'"):
+                self.progress_bar_3.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":v"):
+                self.progress_bar_4.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":D"):
+                self.progress_bar_5.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":3"):
+                self.progress_bar_6.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":|"):
+                self.progress_bar_7.setValue(row[1]/cnt_data*100)
+            elif(row[0] == ":\\"):
+                self.progress_bar_8.setValue(row[1]/cnt_data*100)
+        conn.close()
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
+    ui.createSchema()
     ui.setupUi(Form)
+    ui.readDB()
     Form.show()
     sys.exit(app.exec_())
