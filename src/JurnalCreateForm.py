@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from datetime import date
 from JurnalController import JurnalController
+from Jurnal import Jurnal
 from custom import UIWindow
 
 
@@ -82,11 +83,24 @@ class Ui_NewJurnal(UIWindow):
         self.CancelButton.setText(_translate("NewJurnal", "Cancel"))
         self.label.setText(_translate("NewJurnal", 
                                       "Jurnal Harianku ({0})".format(date.today().strftime('%d-%m-%Y'))))
+        
+    def setReadOnly(self, jurnal: Jurnal):
+        # Fill and disable all edit text
+        self.TitleEdit.setText(jurnal.judul)
+        self.JurnalEdit.setText(jurnal.isi)
+        self.TitleEdit.setReadOnly(True)
+        self.JurnalEdit.setReadOnly(True)
+        
+        # Remove submit button
+        self.SubmitButton.setVisible(False)
+        
+        # change cancel button -> back
+        self.CancelButton.setGeometry(QtCore.QRect(470, 405, 190, 40))
+        self.CancelButton.setText('Back')
 
     def submit(self):
         # Insert to db
         # Show success/fail message
-        # Return to Jurnal UI
         msg = QtWidgets.QMessageBox()
         try:
             self.controller.addJurnal(self.TitleEdit.text(), self.JurnalEdit.toPlainText())
@@ -99,8 +113,8 @@ class Ui_NewJurnal(UIWindow):
             msg.setText(str(e))
             msg.setIcon(QtWidgets.QMessageBox.Critical)
             msg.exec_()
-        finally:
-            pass
+
+        # TODO Return to Jurnal UI
 
     def close(self):
         # Return to Jurnal UI
