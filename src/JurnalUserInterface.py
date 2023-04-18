@@ -10,10 +10,15 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Jurnal
+import JurnalController
+import JurnalCreateForm
+from custom import UIWindow
 
 
-class Ui_Form(object):
+class Ui_Form(UIWindow):
     def setupUi(self, Form):
+        self.jurnalController = JurnalController.JurnalController()
+
         Form.setObjectName("Jurnal Menu")
         Form.resize(1280, 786)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
@@ -105,7 +110,7 @@ class Ui_Form(object):
 "}\n"
 "")
         self.pushButton.setObjectName("pushButton")
-        self.pushButton.clicked.connect(self.insertLabel)
+        self.pushButton.clicked.connect(self.createNewJurnal)
 
         self.verticalLayout.addWidget(self.pushButton)
         self.scrollArea = QtWidgets.QScrollArea(Form)
@@ -150,6 +155,8 @@ class Ui_Form(object):
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.horizontalLayout.setStretch(0, 1)
         self.horizontalLayout.setStretch(2, 3)
+        
+        self.jurnalController.foreach(self.insertLabel)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -164,13 +171,27 @@ class Ui_Form(object):
         self.StatisticsButton.setText(_translate("Form", "Statistik"))
         self.pushButton.setText(_translate("Form", "+          Tambah Jurnal Baru"))
 
-    def insertLabel(self):
-        newJurnal = Jurnal.Jurnal(1, "Buang sampah", "hari ini aku buang sampah pada tempatnya. yey.")
-        newLabel = newJurnal.createLabel(self.scrollAreaWidgetContents)
+    def createNewJurnal(self):
+        try:
+            self.jurnalController.checkToday()
+            self._onswitch('Home')
+        except Exception as e:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Terjadi kesalahan!")
+            msg.setText(str(e))
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.exec_()
+
+    def insertLabel(self, jurnal: Jurnal.Jurnal):
+        newLabel = jurnal.createLabel()
+        newLabel.parent = self.scrollAreaWidgetContents
+
         self.verticalLayout_2.removeItem(self.spacerItem)
         self.verticalLayout_2.addWidget(newLabel)
         self.verticalLayout_2.addItem(self.spacerItem)
+
         newLabel.show()
+
 
 
 

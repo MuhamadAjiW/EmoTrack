@@ -10,10 +10,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from datetime import date
+from JurnalController import JurnalController
+from custom import UIWindow
 
 
-class Ui_NewJurnal(object):
-    def setupUi(self, NewJurnal):
+class Ui_NewJurnal(UIWindow):
+    def setupUi(self, NewJurnal, controller: JurnalController):
         NewJurnal.setObjectName("NewJurnal")
         NewJurnal.resize(720, 480)
         NewJurnal.setStyleSheet("QPushButton {\n"
@@ -32,6 +34,7 @@ class Ui_NewJurnal(object):
         self.JurnalEdit = QtWidgets.QTextEdit(NewJurnal)
         self.JurnalEdit.setGeometry(QtCore.QRect(60, 149, 600, 231))
         self.JurnalEdit.setObjectName("JurnalEdit")
+
         self.TitleEdit = QtWidgets.QLineEdit(NewJurnal)
         self.TitleEdit.setGeometry(QtCore.QRect(60, 90, 600, 41))
         font = QtGui.QFont()
@@ -40,18 +43,23 @@ class Ui_NewJurnal(object):
         self.TitleEdit.setFont(font)
         self.TitleEdit.setMaxLength(255)
         self.TitleEdit.setObjectName("TitleEdit")
+
         self.SubmitButton = QtWidgets.QPushButton(NewJurnal)
         self.SubmitButton.setGeometry(QtCore.QRect(470, 405, 190, 40))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.SubmitButton.setFont(font)
         self.SubmitButton.setObjectName("SubmitButton")
+        self.SubmitButton.clicked.connect(self.submit)
+
         self.CancelButton = QtWidgets.QPushButton(NewJurnal)
         self.CancelButton.setGeometry(QtCore.QRect(260, 405, 190, 40))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.CancelButton.setFont(font)
         self.CancelButton.setObjectName("CancelButton")
+        self.CancelButton.clicked.connect(self.close)
+
         self.label = QtWidgets.QLabel(NewJurnal)
         self.label.setGeometry(QtCore.QRect(60, 30, 600, 31))
         font = QtGui.QFont()
@@ -60,6 +68,8 @@ class Ui_NewJurnal(object):
         self.label.setFont(font)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
+
+        self.controller = controller
 
         self.retranslateUi(NewJurnal)
         QtCore.QMetaObject.connectSlotsByName(NewJurnal)
@@ -73,12 +83,34 @@ class Ui_NewJurnal(object):
         self.label.setText(_translate("NewJurnal", 
                                       "Jurnal Harianku ({0})".format(date.today().strftime('%d-%m-%Y'))))
 
+    def submit(self):
+        # Insert to db
+        # Show success/fail message
+        # Return to Jurnal UI
+        msg = QtWidgets.QMessageBox()
+        try:
+            self.controller.addJurnal(self.TitleEdit.text(), self.JurnalEdit.toPlainText())
+            msg.setWindowTitle("Berhasil!")
+            msg.setText("Jurnal berhasil ditambahkan ke db")
+            msg.setIcon(QtWidgets.QMessageBox.Information)
+            msg.exec_()
+        except Exception as e:
+            msg.setWindowTitle("Terjadi kesalahan!")
+            msg.setText(str(e))
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.exec_()
+        finally:
+            pass
+
+    def close(self):
+        # Return to Jurnal UI
+        pass
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     NewJurnal = QtWidgets.QWidget()
     ui = Ui_NewJurnal()
-    ui.setupUi(NewJurnal)
+    ui.setupUi(NewJurnal, JurnalController())
     NewJurnal.show()
     sys.exit(app.exec_())
