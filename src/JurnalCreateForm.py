@@ -14,6 +14,16 @@ from JurnalController import JurnalController
 from Jurnal import Jurnal
 from custom import UIWindow
 
+class Ui_NewJurnalWindow(QtWidgets.QMainWindow):
+    def __init__(self, controller = None, jurnal = None, parent = None, readOnly = False, updateSignal = None):
+        super(Ui_NewJurnalWindow, self).__init__(parent)
+        self.widget = Ui_NewJurnal()
+        self.widget.setupUi(self, controller)
+        self.updateSignal = updateSignal
+
+        if readOnly:
+            self.widget.setReadOnly(jurnal)
+        
 
 class Ui_NewJurnal(UIWindow):
     def setupUi(self, NewJurnal, controller: JurnalController):
@@ -71,6 +81,7 @@ class Ui_NewJurnal(UIWindow):
         self.label.setObjectName("label")
 
         self.controller = controller
+        self.parent = NewJurnal
 
         self.retranslateUi(NewJurnal)
         QtCore.QMetaObject.connectSlotsByName(NewJurnal)
@@ -108,17 +119,19 @@ class Ui_NewJurnal(UIWindow):
             msg.setText("Jurnal berhasil ditambahkan ke db")
             msg.setIcon(QtWidgets.QMessageBox.Information)
             msg.exec_()
+
+            self.parent.updateSignal(self.controller.daftar_jurnal[-1])
         except Exception as e:
             msg.setWindowTitle("Terjadi kesalahan!")
             msg.setText(str(e))
             msg.setIcon(QtWidgets.QMessageBox.Critical)
             msg.exec_()
-
-        # TODO Return to Jurnal UI
-
+    
+        self.close()
     def close(self):
-        # Return to Jurnal UI
+        self.parent.close()
         pass
+
 
 if __name__ == "__main__":
     import sys

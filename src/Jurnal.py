@@ -21,6 +21,8 @@ class Jurnal:
     
     def show(self, event):
         # TODO tampilkan jurnal dalam read only form
+        from JurnalCreateForm import Ui_NewJurnalWindow
+        self.ui = Ui_NewJurnalWindow(readOnly=True, jurnal=self)
         pass
 
     def insert_to_database(self, cursor: sqlite3.Cursor):

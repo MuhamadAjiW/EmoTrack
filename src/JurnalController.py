@@ -46,6 +46,8 @@ class JurnalController:
 
         if len(self.cursor.fetchall()) > 0:
             raise Exception("Anda telah menulis jurnal hari ini.")
+
+        self.conn.close()
         
     def addJurnal(self, judul, isi, waktuEdit = None):
         newJurnal = Jurnal.Jurnal(None, judul, isi, waktuEdit)
@@ -53,6 +55,7 @@ class JurnalController:
         newJurnal.insert_to_database(self.conn.cursor())
         self.daftar_jurnal.append(newJurnal)
         self.conn.commit()
+        self.conn.close()
         
 
 
