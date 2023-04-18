@@ -275,8 +275,7 @@ class Ui_Form(object):
         self.button8.setText(_translate("Form", ":\\"))
         
         # Get current date
-        current_date = datetime.datetime.now()
-        current_date = current_date.strftime("%d/%m/%Y")
+        current_date = datetime.datetime.now().strftime("%d/%m/%Y")
         self.label_tanggal.setText(_translate("Form", current_date))
         
         self.label_mood_sekarang.setText(_translate("Form", ""))
@@ -309,6 +308,27 @@ class Ui_Form(object):
         self.readDB()
     
     def readDB(self):
+        # connect to database
+        conn = sqlite3.connect("database.db")
+        
+        # set null mood from the (latest date + 1) until yesterday
+        latest_date = conn.execute("SELECT date FROM mood ORDER BY id DESC LIMIT 1").fetchone()
+        if(latest_date is not None):
+            latest_date_plus_1 = (datetime.datetime.strptime(latest_date[0], "%d/%m/%Y") + datetime.timedelta(days=1)).strftime("%d/%m/%Y")
+            today = datetime.datetime.now().strftime("%d/%m/%Y")
+            tommorow = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%d/%m/%Y")
+            
+            while(latest_date_plus_1 != today and latest_date_plus_1 != tommorow):
+                conn.execute("INSERT INTO mood (mood, date) VALUES (?, ?)", ("NULL", latest_date_plus_1))
+                conn.commit()
+                latest_date_plus_1 = (datetime.datetime.strptime(latest_date_plus_1, "%d/%m/%Y") + datetime.timedelta(days=1)).strftime("%d/%m/%Y")
+        
+        # set current mood if exist
+        mood_sekarang = conn.execute("SELECT mood FROM mood WHERE date = ?", (self.label_tanggal.text(),)).fetchone()
+        
+        if mood_sekarang is not None:
+            self.label_mood_sekarang.setText(mood_sekarang[0])
+        
         # initiate progress bar
         self.progress_bar_1.setValue(0)
         self.progress_bar_2.setValue(0)
@@ -319,20 +339,13 @@ class Ui_Form(object):
         self.progress_bar_7.setValue(0)
         self.progress_bar_8.setValue(0)
         
-        # set current mood if exist
-        conn = sqlite3.connect("database.db")
-        mood_sekarang = conn.execute("SELECT mood FROM mood WHERE date = ?", (self.label_tanggal.text(),)).fetchone()
-        
-        if mood_sekarang is not None:
-            self.label_mood_sekarang.setText(mood_sekarang[0])
-            
         # set progress bar
         cursor = conn.execute(''' 
                                 SELECT mood, COUNT(mood) 
                                 FROM (
                                     SELECT mood 
                                     FROM mood 
-                                    ORDER BY date DESC 
+                                    ORDER BY id DESC 
                                     LIMIT 30
                                 ) AS subquery
                                 GROUP BY mood
