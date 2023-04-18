@@ -9,11 +9,17 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import Jurnal
+import JurnalController
+import JurnalCreateForm
+from custom import UIWindow
 
 
-class Ui_Form(object):
+class Ui_Form(UIWindow):
     def setupUi(self, Form):
-        Form.setObjectName("Form")
+        self.jurnalController = JurnalController.JurnalController()
+
+        Form.setObjectName("Jurnal Menu")
         Form.resize(1280, 786)
         self.horizontalLayout = QtWidgets.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -104,6 +110,8 @@ class Ui_Form(object):
 "}\n"
 "")
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.clicked.connect(self.createNewJurnal)
+
         self.verticalLayout.addWidget(self.pushButton)
         self.scrollArea = QtWidgets.QScrollArea(Form)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -140,61 +148,19 @@ class Ui_Form(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label.setObjectName("label")
-        self.verticalLayout_2.addWidget(self.label)
-        self.label_6 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_6.setObjectName("label_6")
-        self.verticalLayout_2.addWidget(self.label_6)
-        self.label_5 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_5.setObjectName("label_5")
-        self.verticalLayout_2.addWidget(self.label_5)
-        self.label_4 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_4.setObjectName("label_4")
-        self.verticalLayout_2.addWidget(self.label_4)
-        self.label_3 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_3.setObjectName("label_3")
-        self.verticalLayout_2.addWidget(self.label_3)
-        self.label_2 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_2.setObjectName("label_2")
-        self.verticalLayout_2.addWidget(self.label_2)
-        self.label_7 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_7.setObjectName("label_7")
-        self.verticalLayout_2.addWidget(self.label_7)
-        self.label_8 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_8.setObjectName("label_8")
-        self.verticalLayout_2.addWidget(self.label_8)
-        self.label_9 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_9.setObjectName("label_9")
-        self.verticalLayout_2.addWidget(self.label_9)
-        self.label_10 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_10.setObjectName("label_10")
-        self.verticalLayout_2.addWidget(self.label_10)
-        self.label_11 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_11.setObjectName("label_11")
-        self.verticalLayout_2.addWidget(self.label_11)
-        self.label_12 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_12.setObjectName("label_12")
-        self.verticalLayout_2.addWidget(self.label_12)
-        self.label_13 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_13.setObjectName("label_13")
-        self.verticalLayout_2.addWidget(self.label_13)
-        self.label_14 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_14.setObjectName("label_14")
-        self.verticalLayout_2.addWidget(self.label_14)
-        self.label_15 = QtWidgets.QLabel(self.scrollAreaWidgetContents)
-        self.label_15.setObjectName("label_15")
-        self.verticalLayout_2.addWidget(self.label_15)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_2.addItem(spacerItem)
+        self.spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_2.addItem(self.spacerItem)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout.addWidget(self.scrollArea)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.horizontalLayout.setStretch(0, 1)
         self.horizontalLayout.setStretch(2, 3)
+        
+        self.jurnalController.foreach(self.insertLabel)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -204,21 +170,29 @@ class Ui_Form(object):
         self.ReturnButton.setText(_translate("Form", "Kembali"))
         self.StatisticsButton.setText(_translate("Form", "Statistik"))
         self.pushButton.setText(_translate("Form", "+          Tambah Jurnal Baru"))
-        self.label.setText(_translate("Form", "TextLabel"))
-        self.label_6.setText(_translate("Form", "TextLabel"))
-        self.label_5.setText(_translate("Form", "TextLabel"))
-        self.label_4.setText(_translate("Form", "TextLabel"))
-        self.label_3.setText(_translate("Form", "TextLabel"))
-        self.label_2.setText(_translate("Form", "TextLabel"))
-        self.label_7.setText(_translate("Form", "TextLabel"))
-        self.label_8.setText(_translate("Form", "TextLabel"))
-        self.label_9.setText(_translate("Form", "TextLabel"))
-        self.label_10.setText(_translate("Form", "TextLabel"))
-        self.label_11.setText(_translate("Form", "TextLabel"))
-        self.label_12.setText(_translate("Form", "TextLabel"))
-        self.label_13.setText(_translate("Form", "TextLabel"))
-        self.label_14.setText(_translate("Form", "TextLabel"))
-        self.label_15.setText(_translate("Form", "TextLabel"))
+
+    def createNewJurnal(self):
+        try:
+            self.jurnalController.checkToday()
+            self._onswitch('Home')
+        except Exception as e:
+            msg = QtWidgets.QMessageBox()
+            msg.setWindowTitle("Terjadi kesalahan!")
+            msg.setText(str(e))
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.exec_()
+
+    def insertLabel(self, jurnal: Jurnal.Jurnal):
+        newLabel = jurnal.createLabel()
+        newLabel.parent = self.scrollAreaWidgetContents
+
+        self.verticalLayout_2.removeItem(self.spacerItem)
+        self.verticalLayout_2.addWidget(newLabel)
+        self.verticalLayout_2.addItem(self.spacerItem)
+
+        newLabel.show()
+
+
 
 
 if __name__ == "__main__":
