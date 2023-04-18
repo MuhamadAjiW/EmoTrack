@@ -174,7 +174,8 @@ class Ui_Form(UIWindow):
     def createNewJurnal(self):
         try:
             self.jurnalController.checkToday()
-            self._onswitch('Home')
+            self.newWindow = JurnalCreateForm.Ui_NewJurnalWindow(controller=self.jurnalController, updateSignal = self.insertLabel)
+            self.newWindow.show()
         except Exception as e:
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Terjadi kesalahan!")
