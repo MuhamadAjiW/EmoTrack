@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache/
 src/__pycache__/
 src/Resource/workspace/
 src/tempCodeRunnerFile.py

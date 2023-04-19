@@ -316,7 +316,7 @@ class QuotesForm(UIWindow):
             if self.controller.daftarQuotes[codeIdx-1].builtin == True:
                 msg = QMessageBox()
                 msg.setWindowTitle("Terjadi kesalahan!")
-                msg.setText(str("Quotes ini tidak diubah karena merupakan bawaan aplikasi"))
+                msg.setText(str("Quotes ini tidak dapat diubah karena merupakan bawaan aplikasi"))
                 msg.setIcon(QMessageBox.Critical)
                 msg.exec_()
             else:

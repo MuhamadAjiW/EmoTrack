@@ -386,7 +386,7 @@ class JurnalForm(UIWindow):
         exec("self.entry%d = QPushButton(self.content)" % self.entries)
         exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
         exec("self.list.insertWidget(1, self.entry%d)" % self.entries)
-        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul.replace("'", "\\'").replace('"', '\\"')))
+        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul.replace("'", "\\'").replace('"', '\\"').replace('\n', '\\n')))
         exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
         exec("self.entry%d.setFont(font)" % self.entries)
 
