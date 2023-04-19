@@ -12,7 +12,7 @@ from os import path
 class UserInterface(QMainWindow):
     def __init__(self, startView: UIWindow, views: dict, parent=None):
         super(UserInterface, self).__init__(parent)
-        self.setWindowIcon(QIcon(path.join(path.dirname(path.abspath(__file__)), "Resource/nameIcon.png")))
+        self.setWindowIcon(QIcon(path.join(path.dirname(path.abspath(__file__)), "../img/nameIcon.png")))
         self.setWindowTitle("EmoTrack")
         self.setObjectName("UI Controller")
         self.setFixedSize(1280, 786)
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     abspath = path.dirname(path.abspath(__file__))
     app = QApplication(sys.argv)
     
-    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Resource/Helvetica/Helvetica.ttf"))    
+    _id = QFontDatabase.addApplicationFont(path.join(abspath, "../img/Helvetica/Helvetica.ttf"))    
     
     HomeUi = HomeForm()
     MoodUi = MoodForm()

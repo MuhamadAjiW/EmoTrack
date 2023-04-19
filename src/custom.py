@@ -15,6 +15,7 @@ class MainSignals(QObject):
 class UIWindow(object):
     def __init__(self):
         super(UIWindow).__init__()
+        self.resources = path.join(path.dirname(path.abspath(__file__)), '../img')
         self.signals = MainSignals()
 
     def _onswitch(self, dest):
@@ -28,7 +29,7 @@ class CustomOverlay(QWidget):
     def __init__(self, parent=None):
         super(CustomOverlay, self).__init__(parent)
         self.signals = OverlaySignals()
-        self.resources = path.join(path.dirname(path.abspath(__file__)), 'Resource')
+        self.resources = path.join(path.dirname(path.abspath(__file__)), '../img')
 
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)

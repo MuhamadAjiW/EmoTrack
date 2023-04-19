@@ -344,9 +344,9 @@ class MoodForm(UIWindow):
 
 
 if __name__ == "__main__":
-    abspath = path.dirname(path.abspath(__file__))
+    abspath = path.join(path.dirname(path.abspath(__file__)), '../img')
     app = QApplication(sys.argv)
-    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Resource/Helvetica/Helvetica.ttf"))    
+    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Helvetica/Helvetica.ttf"))    
 
     Form = QWidget()
     ui = MoodForm()

@@ -76,14 +76,14 @@ class QuotesForm(UIWindow):
         enter = quote.find('\n')
         if enter == -1:
             if len(quote) < 100:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')))
             else:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))
         else:
             if enter < 100:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:enter] + '...'))
             else:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))
 
         exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
         exec("self.entry%d.setFont(font)" % self.entries)
@@ -327,14 +327,14 @@ class QuotesForm(UIWindow):
                 enter = quote.find('\n')
                 if enter == -1:
                     if len(quote) < 100:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')))
                     else:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))
                 else:
                     if enter < 100:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:enter] + '...'))
                     else:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))   
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))   
 
         self._closepopup()
 
@@ -366,9 +366,9 @@ class QuotesForm(UIWindow):
 
 
 if __name__ == "__main__":
-    abspath = path.dirname(path.abspath(__file__))
+    abspath = path.join(path.dirname(path.abspath(__file__)), '../img')
     app = QApplication(sys.argv)
-    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Resource/Helvetica/Helvetica.ttf"))    
+    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Helvetica/Helvetica.ttf"))    
 
     Widget = QWidget()
     ui = QuotesForm()
