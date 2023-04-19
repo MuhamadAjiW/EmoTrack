@@ -13,7 +13,7 @@ class UserInterface(QMainWindow):
     def __init__(self, startView: UIWindow, views: dict, parent=None):
         super(UserInterface, self).__init__(parent)
         self.setObjectName("UI Controller")
-        self.resize(1280, 786)
+        self.setFixedSize(1280, 786)
 
         self.displays = views
         self.view = QFrame(self)
