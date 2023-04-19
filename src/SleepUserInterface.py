@@ -405,17 +405,15 @@ class SleepForm(UIWindow):
 
         self.retranslateUi(Form)
         self.controller.foreach(self.addSleep)
-        # TODO display sleep
         QMetaObject.connectSlotsByName(Form)
 
     def addSleep(self, sleep: Sleep.Sleep):
-        #TODO: sleep data
         _translate = QCoreApplication.translate
         font = QFont()
         font.setFamily("Helvetica")
         font.setPointSize(13)
 
-        exec("self.entry%d = QLabel(self.content)" % self.entries) # TODO : ganti jangan push button
+        exec("self.entry%d = QLabel(self.content)" % self.entries)
         exec("self.entry%d.setFrameShape(QFrame.StyledPanel)" % self.entries)
         exec("self.entry%d.setStyleSheet('background: rgb(255, 255, 255)')" % self.entries)
         exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
@@ -458,11 +456,20 @@ class SleepForm(UIWindow):
         return f"{hours:02d}:{minutes:02d}"
 
     def _updateStatistics(self):
-        #TODO: get statistics, testing
         _translate = QCoreApplication.translate
         recent_sleep = self.controller.get_sleep_recent_duration()
         if(len(recent_sleep) == 0):
             self.statsAvg.setText(_translate("Form", "Rata - rata tidur: 0 jam 0 menit 0 detik"))
+            day_enum = {}
+            for i in range(1, 8):
+                day_str = '0%d-04-2023' % (10-i)
+                day_datetime = datetime.datetime.strptime(day_str, '%d-%m-%Y').date()
+                day_abbrevation = day_datetime.strftime('%a')
+                day_enum[day_abbrevation] = i
+                exec('self.progressBar_%d.setProperty("value", %d)' % (i, 0))
+                exec('self.progressBar_%d.setMaximum(%d)' % (i, 100))
+                exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (i, self._progressbarFormating(0)))
+
         else:
             self.mode = "Statistic"
             sleep_duration = sum(duration for (duration, day) in recent_sleep)
@@ -472,20 +479,21 @@ class SleepForm(UIWindow):
             avg_hour = avg // 3600
             self.statsAvg.setText(_translate("Form", "Rata - rata tidur: %d jam %d menit %d detik" % (avg_hour, avg_minute, avg_second)))
 
-        day_enum = {}
-        maximum_duration = max(duration for duration, day in recent_sleep)
-        for i in range(1, 8):
-            day_str = '0%d-04-2023' % (10-i)
-            day_datetime = datetime.datetime.strptime(day_str, '%d-%m-%Y').date()
-            day_abbrevation = day_datetime.strftime('%a')
-            day_enum[day_abbrevation] = i
-            exec('self.progressBar_%d.setProperty("value", %d)' % (i, 0))
-            exec('self.progressBar_%d.setMaximum(%d)' % (i, maximum_duration))
-            exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (i, self._progressbarFormating(0)))
+            day_enum = {}
+            maximum_duration = max(duration for duration, day in recent_sleep)
+            for i in range(1, 8):
+                day_str = '0%d-04-2023' % (10-i)
+                day_datetime = datetime.datetime.strptime(day_str, '%d-%m-%Y').date()
+                day_abbrevation = day_datetime.strftime('%a')
+                day_enum[day_abbrevation] = i
+                exec('self.progressBar_%d.setProperty("value", %d)' % (i, 0))
+                exec('self.progressBar_%d.setMaximum(%d)' % (i, maximum_duration))
+                exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (i, self._progressbarFormating(0)))
 
-        for duration, day in recent_sleep:
-            exec('self.progressBar_%d.setProperty("value", %d)' % (day_enum[day], duration))
-            exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (day_enum[day], self._progressbarFormating(duration)))
+            # asumsi hanya tidur sekali sehari, hari ditentukan oleh waktu tidur, setiap hari tidur
+            for duration, day in recent_sleep:
+                exec('self.progressBar_%d.setProperty("value", %d)' % (day_enum[day], duration))
+                exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (day_enum[day], self._progressbarFormating(duration)))
         
     def _onStatistics(self):
         if self.mode == "List":
