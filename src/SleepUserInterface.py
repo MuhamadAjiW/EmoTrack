@@ -415,6 +415,24 @@ class SleepForm(UIWindow):
         #TODO: get statistics
         QMetaObject.connectSlotsByName(Form)
 
+    def addJurnal(self, jurnal: Jurnal.Jurnal):
+        #TODO: sleep data
+        _translate = QCoreApplication.translate
+        font = QFont()
+        font.setFamily("Helvetica")
+        font.setPointSize(13)
+
+        exec("self.entry%d = QPushButton(self.content)" % self.entries)
+        exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
+        exec("self.list.insertWidget(1, self.entry%d)" % self.entries)
+        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul))
+        exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
+        exec("self.entry%d.setFont(font)" % self.entries)
+
+        self.entries += 1
+        self.scrollAreaHeight = min(726, self.entries * 70)
+        self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
+
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
