@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NewJurnal</class>
+ <widget class="QWidget" name="NewJurnal">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>720</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+    background: rgb(240, 240, 240);
+    border: 2px solid rgb(130, 130, 130);
+    border-width: 2px;
+    border-radius: 0px;
+    color: black;
+}
+QPushButton:hover {
+    background: rgb(215, 215, 215);
+}
+QPushButton:pressed {
+    background: rgb(200, 200, 200);
+}</string>
+  </property>
+  <widget class="QTextEdit" name="JurnalEdit">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>149</y>
+     <width>600</width>
+     <height>231</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="TitleEdit">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>90</y>
+     <width>600</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="maxLength">
+    <number>255</number>
+   </property>
+   <property name="placeholderText">
+    <string>Title</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="SubmitButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>405</y>
+     <width>190</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Submit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="CancelButton">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>405</y>
+     <width>190</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>30</y>
+     <width>600</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Jurnal Harianku (DD-MM-YYYY)</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
