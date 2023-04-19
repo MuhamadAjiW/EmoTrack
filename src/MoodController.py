@@ -36,10 +36,10 @@ class MoodController:
         if latestDate is None:
             return
         latestDatePlusOne = (datetime.datetime.strptime(
-            latestDate[0], "%d/%m/%Y") + datetime.timedelta(days=1)).strftime("%d/%m/%Y")
-        today = datetime.datetime.now().strftime("%d/%m/%Y")
-        tommorow = (datetime.datetime.strptime(today, "%d/%m/%Y") +
-                    datetime.timedelta(days=1)).strftime("%d/%m/%Y")
+            latestDate[0], "%Y-%m-%d") + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        tommorow = (datetime.datetime.strptime(today, "%Y-%m-%d") +
+                    datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         while latestDatePlusOne != today and latestDatePlusOne != tommorow:
             self.conn.execute("""
@@ -48,7 +48,7 @@ class MoodController:
             """.format(latestDatePlusOne))
             self.conn.commit()
             latestDatePlusOne = (datetime.datetime.strptime(
-                latestDatePlusOne, "%d/%m/%Y") + datetime.timedelta(days=1)).strftime("%d/%m/%Y")
+                latestDatePlusOne, "%Y-%m-%d") + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         self.conn.close()
 
@@ -56,7 +56,7 @@ class MoodController:
         # Add current mood to database
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
-        today = datetime.datetime.now().strftime("%d/%m/%Y")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
 
         self.cursor.execute("""
             SELECT * FROM mood
@@ -81,7 +81,7 @@ class MoodController:
         # Get current mood
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
-        today = datetime.datetime.now().strftime("%d/%m/%Y")
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
 
         self.cursor.execute("""
             SELECT mood FROM mood
