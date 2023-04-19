@@ -1,13 +1,13 @@
 import sqlite3
-import os
-import Jurnal
+from os import path
+import Jurnal as Jurnal
 import datetime
-
-dir = os.path.dirname(os.path.realpath(__file__))
 
 class JurnalController:
     def __init__(self) -> None:
-        self.conn = sqlite3.connect(os.path.join(dir,"database.db"))
+        self.abspath = path.dirname(path.abspath(__file__))
+
+        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
         self.cursor = self.conn.cursor()
 
         self.cursor.execute("""
@@ -24,18 +24,18 @@ class JurnalController:
         """)
 
         rows = self.cursor.fetchall()
-        self.daftar_jurnal = []
+        self.daftarJurnal = []
         for row in rows:
-            self.daftar_jurnal += [Jurnal.createFromTable(row)]
+            self.daftarJurnal += [Jurnal.createFromTable(row)]
 
         self.conn.close()
 
     def foreach(self, func):
-        for x in self.daftar_jurnal:
+        for x in self.daftarJurnal:
             func(x)
 
     def checkToday(self):
-        self.conn = sqlite3.connect(os.path.join(dir,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
         self.cursor = self.conn.cursor()
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -51,15 +51,18 @@ class JurnalController:
         
     def addJurnal(self, judul, isi, waktuEdit = None):
         newJurnal = Jurnal.Jurnal(None, judul, isi, waktuEdit)
-        self.conn = sqlite3.connect(os.path.join(dir,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
         newJurnal.insert_to_database(self.conn.cursor())
-        self.daftar_jurnal.append(newJurnal)
+        self.daftarJurnal.append(newJurnal)
         self.conn.commit()
         self.conn.close()
+
+    def clearDB(self):
+        conn = sqlite3.connect(path.join(self.abspath, 'database.db'))
+        conn.execute('DELETE FROM quotes')
+        conn.commit()
+        conn.close()
         
-
-
-
 
 if __name__ == '__main__':
     x = JurnalController()

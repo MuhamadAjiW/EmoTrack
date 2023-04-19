@@ -4,6 +4,9 @@ from PyQt5.QtGui import *
 from custom import *
 from HomeUserInterface import *
 from JurnalUserInterface import *
+from MoodUserInterface import *
+from QuotesUserInterface import *
+from SleepUserInterface import *
 from os import path
 
 class UserInterface(QMainWindow):
@@ -16,20 +19,19 @@ class UserInterface(QMainWindow):
         self.view = QFrame(self)
         self.currentUI = startView
 
-        startView.signals.switch.connect(self.test)
+        for display in self.displays.values():
+            display.signals.switch.connect(self.switchWindow)
+
         startView.setupUi(self.view)
         self.setCentralWidget(self.view)
 
-    def switchWindow(self, window: UIWindow):
+    def switchWindow(self, code):
+        window = self.displays[code]
         del self.view
         self.view = QFrame(self)
         window.setupUi(self.view)
         self.currentUI = self.view
         self.setCentralWidget(self.view)
-
-    def test(self, code):
-        print(code)
-        self.switchWindow(self.displays[code])
 
 if __name__ == "__main__":
     abspath = path.dirname(path.abspath(__file__))
@@ -37,17 +39,17 @@ if __name__ == "__main__":
     
     _id = QFontDatabase.addApplicationFont(path.join(abspath, "Resource/Helvetica/Helvetica.ttf"))    
     
-    HomeUi = homeForm()
-    MoodUi = Ui_Form()
-    JournalUi = Ui_Form()
-    SleepUi = Ui_Form()
-    QuotesUi = Ui_Form()
+    HomeUi = HomeForm()
+    MoodUi = MoodForm()
+    JournalUi = JurnalForm()
+    SleepUi = SleepForm()
+    QuotesUi = QuotesForm()
     UiDict ={
         "Home": HomeUi,
-        "Mood": JournalUi,
+        "Mood": MoodUi,
         "Journal": JournalUi,
-        "Sleep": JournalUi,
-        "Quotes": JournalUi,
+        "Sleep": SleepUi,
+        "Quotes": QuotesUi,
     }
     mainWindow = UserInterface(HomeUi, UiDict)
 
