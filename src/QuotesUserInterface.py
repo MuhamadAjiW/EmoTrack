@@ -76,9 +76,9 @@ class QuotesForm(UIWindow):
         enter = quote.find('\n')
         if enter == -1:
             if len(quote) < 100:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("\n", "\\n     ")))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
             else:
-                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("\n", "\\n     ")[:100] + '...'))
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
         else:
             if enter < 100:
                 exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
@@ -322,8 +322,19 @@ class QuotesForm(UIWindow):
             else:
                 self.controller.editQuote(codeIdx-1, self.popup.quoteInput.toPlainText())
 
-            _translate = QCoreApplication.translate
-            exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, self.popup.quoteInput.toPlainText().replace("\n", "\\n     ")))        
+                _translate = QCoreApplication.translate
+                quote = self.popup.quoteInput.toPlainText()
+                enter = quote.find('\n')
+                if enter == -1:
+                    if len(quote) < 100:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
+                    else:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+                else:
+                    if enter < 100:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
+                    else:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))   
 
         self._closepopup()
 
