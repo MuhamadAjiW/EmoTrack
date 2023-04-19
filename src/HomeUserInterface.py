@@ -59,7 +59,6 @@ class HomeForm(UIWindow):
     def setupUi(self, Form):
         self.controller = QuoteController()
         self.parent = Form
-        self.resources = path.dirname(path.abspath(__file__))
 
         Form.setObjectName("Home")
         Form.resize(1280, 786)
@@ -124,27 +123,27 @@ class HomeForm(UIWindow):
         self.QuitButton.setObjectName("QuitButton")
         self.QuitButton.clicked.connect(sys.exit)
 
-        self.MoodButton = CustomSVGButton(path.join(self.resources, "Resource/moodIcon.svg"), path.join(self.resources, "Resource/moodIconH.svg"), self.OpeningPanel)
+        self.MoodButton = CustomSVGButton(path.join(self.resources, "moodIcon.svg"), path.join(self.resources, "moodIconH.svg"), self.OpeningPanel)
         self.MoodButton.setGeometry(QRect(30, 600, 40, 40))
         self.MoodButton.setObjectName("MoodButton")
         self.MoodButton.clicked.connect(lambda: self._onswitch("Mood"))
 
-        self.JournalButton = CustomSVGButton(path.join(self.resources, "Resource/journalIcon.svg"), path.join(self.resources, "Resource/journalIconH.svg"), self.OpeningPanel)
+        self.JournalButton = CustomSVGButton(path.join(self.resources, "journalIcon.svg"), path.join(self.resources, "journalIconH.svg"), self.OpeningPanel)
         self.JournalButton.setGeometry(QRect(80, 600, 40, 40))
         self.JournalButton.setObjectName("JournalButton")
         self.JournalButton.clicked.connect(lambda: self._onswitch("Journal"))
 
-        self.SleepButton = CustomSVGButton(path.join(self.resources, "Resource/sleepIcon.svg"), path.join(self.resources, "Resource/sleepIconH.svg"), self.OpeningPanel)
+        self.SleepButton = CustomSVGButton(path.join(self.resources, "sleepIcon.svg"), path.join(self.resources, "sleepIconH.svg"), self.OpeningPanel)
         self.SleepButton.setGeometry(QRect(130, 600, 40, 40))
         self.SleepButton.setObjectName("SleepButton")
         self.SleepButton.clicked.connect(lambda: self._onswitch("Sleep"))
         
-        self.QuotesButton = CustomSVGButton(path.join(self.resources, "Resource/quoteIcon.svg"), path.join(self.resources, "Resource/quoteIconH.svg"), self.OpeningPanel)
+        self.QuotesButton = CustomSVGButton(path.join(self.resources, "quoteIcon.svg"), path.join(self.resources, "quoteIconH.svg"), self.OpeningPanel)
         self.QuotesButton.setGeometry(QRect(180, 600, 40, 40))
         self.QuotesButton.setObjectName("QuotesButton")
         self.QuotesButton.clicked.connect(lambda: self._onswitch("Quotes"))
 
-        self.ChangeName = CustomSVGButton(path.join(self.resources, "Resource/nameIcon.svg"), path.join(self.resources, "Resource/nameIconH.svg"), self.OpeningPanel)
+        self.ChangeName = CustomSVGButton(path.join(self.resources, "nameIcon.svg"), path.join(self.resources, "nameIconH.svg"), self.OpeningPanel)
         self.ChangeName.setGeometry(QRect(250, 70, 30, 30))
         self.ChangeName.setObjectName("ChangeName")
         self.ChangeName.clicked.connect(self._onpopup)
@@ -158,7 +157,7 @@ class HomeForm(UIWindow):
         self.ImagePanel.setStyleSheet(
 "    background: rgb(200, 200, 200);\n"
 )
-        self.OpeningImage = CustomSVGImage(path.join(self.resources, "Resource/opening.svg"), self.ImagePanel)
+        self.OpeningImage = CustomSVGImage(path.join(self.resources, "opening.svg"), self.ImagePanel)
         self.OpeningImage.setGeometry(QRect(1, 1, 959, 790))
         self.OpeningImage.setObjectName("OpeningImage")
 
@@ -174,7 +173,7 @@ class HomeForm(UIWindow):
         Form.setWindowTitle(_translate("Form", "Home"))
         self.OpeningQuotes.setText(_translate("Form", self.controller.fetchRandom()))
 
-        f = open(path.join(self.resources, "Resource/savedName.txt"), "r")
+        f = open(path.join(self.resources, "savedName.txt"), "r")
 
         self.NameLabel.setText(_translate("Form", "Hai " + f.readline()))
 
@@ -194,7 +193,7 @@ class HomeForm(UIWindow):
 
     def _onconfirm(self):
         _translate = QCoreApplication.translate
-        f = open(path.join(self.resources, "Resource/savedName.txt"), "w")
+        f = open(path.join(self.resources, "savedName.txt"), "w")
         f.write(self.popup.nameInput.text())
         f.close()
         self.NameLabel.setText(_translate("Form", "Hai " + self.popup.nameInput.text()))
@@ -202,9 +201,9 @@ class HomeForm(UIWindow):
 
 
 if __name__ == "__main__":
-    homepath = path.dirname(path.abspath(__file__))
+    homepath = path.join(path.dirname(path.abspath(__file__)), '../img')
     app = QApplication(sys.argv)
-    _id = QFontDatabase.addApplicationFont(path.join(homepath, "Resource/Helvetica/Helvetica.ttf"))    
+    _id = QFontDatabase.addApplicationFont(path.join(homepath, "Helvetica/Helvetica.ttf"))    
 
     Widget = QWidget()
     ui = HomeForm()

@@ -386,7 +386,7 @@ class JurnalForm(UIWindow):
         exec("self.entry%d = QPushButton(self.content)" % self.entries)
         exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
         exec("self.list.insertWidget(1, self.entry%d)" % self.entries)
-        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul))
+        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul.replace("'", "\\'").replace('"', '\\"')))
         exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
         exec("self.entry%d.setFont(font)" % self.entries)
 
@@ -459,7 +459,10 @@ class JurnalForm(UIWindow):
         self.popup.close()
 
 if __name__ == "__main__":
+    abspath = path.join(path.dirname(path.abspath(__file__)), '../img')
     app = QApplication(sys.argv)
+    _id = QFontDatabase.addApplicationFont(path.join(abspath, "Helvetica/Helvetica.ttf"))    
+
     Form = QWidget()
     ui = JurnalForm()
     ui.setupUi(Form)
