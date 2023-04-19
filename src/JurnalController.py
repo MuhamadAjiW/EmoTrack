@@ -48,6 +48,28 @@ class JurnalController:
             raise Exception("Anda telah menulis jurnal hari ini.")
 
         self.conn.close()
+
+    def getFrequencyArray(self, year):
+        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
+        self.cursor = self.conn.cursor()
+        
+        self.cursor.execute("""
+            SELECT COUNT(id), strftime('%m', waktuEdit) FROM jurnal
+            WHERE strftime('%Y', waktuEdit) = '{0}'
+            GROUP BY strftime('%m', waktuEdit)
+            ORDER BY strftime('%m', waktuEdit)
+        """.format(year))
+
+        res = self.cursor.fetchall()
+        self.conn.close()
+
+        freq = [0 for i in range(12)]
+        for i in range(12):
+            for x in res:
+                if i+1 == int(x[1]):
+                    freq[i] = x[0]
+
+        return freq
         
     def addJurnal(self, judul, isi, waktuEdit = None):
         newJurnal = Jurnal.Jurnal(None, judul, isi, waktuEdit)

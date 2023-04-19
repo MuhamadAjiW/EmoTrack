@@ -14,8 +14,12 @@ from PyQt5.QtGui import *
 from custom import *
 import Jurnal as Jurnal
 from JurnalController import JurnalController
+from StatisticWithLabel import *
 from os import path
+import datetime
+from calendar import monthrange
 import sys
+
 
 class SleepOverlay(CustomOverlay):
     def __init__(self, codeIdx, controller, parent=None):
@@ -284,6 +288,28 @@ class JurnalForm(UIWindow):
         self.horizontalLayout.setStretch(1, 3)
 
         self.statistics = QFrame(Form)
+        self.pageLabel = QLabel("Frekuensi Jurnal Pada Tahun", self.statistics)
+        self.pageLabel.setGeometry(QRect(30, 30, 240, 30))
+        self.pageLabel.setFont(font)
+        self.pageLabel.setObjectName("pageLabel")
+
+        self.pageDetail = QSpinBox(self.statistics)
+        self.pageDetail.setObjectName('pageDetail')
+        self.pageDetail.setButtonSymbols(QAbstractSpinBox.UpDownArrows)
+        self.pageDetail.setMinimum(2010)
+        self.pageDetail.setMaximum(3000)
+        self.pageDetail.setValue(datetime.date.today().year)
+        self.pageDetail.setGeometry(QRect(270, 30, 120, 30))
+        self.pageDetail.lineEdit().setReadOnly(True)
+        self.pageDetail.valueChanged.connect(self.updateStatistics)
+        self.pageDetail.setFont(font)
+
+        self.statisticsScrollArea = QScrollArea(self.statistics)
+        self.statisticsScrollAreaHeight = 560
+        self.statisticsScrollArea.setGeometry(QRect(30, 80, 890, self.statisticsScrollAreaHeight))
+        self.statisticsScrollArea.setWidgetResizable(True)
+        self.statisticsScrollArea.setObjectName("statisticsScrollArea")  
+
         self.statistics.setContentsMargins(40, 64, 20, -1)
         self.statistics.setObjectName("statistics")
         self.statistics.setStyleSheet(
@@ -306,110 +332,45 @@ class JurnalForm(UIWindow):
 "    background: rgb(200, 200, 200);\n"
 "}")
 
-        self.statsAvg = QLabel(self.statistics)
-        self.statsAvg.setGeometry(QRect(30, 160, 321, 61))
-        self.statsAvg.setFont(font)
-        self.statsAvg.setFrameShape(QFrame.NoFrame)
-        self.statsAvg.setFrameShadow(QFrame.Plain)
-        self.statsAvg.setObjectName("label")
-        self.label_1 = QLabel(self.statistics)
-        self.label_1.setGeometry(QRect(30, 230, 60, 40))
-        self.label_1.setLayoutDirection(Qt.LeftToRight)
-        self.label_1.setFrameShape(QFrame.StyledPanel)
-        self.label_1.setAlignment(Qt.AlignCenter)
-        self.label_1.setObjectName("label_2")
-        self.label_1.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_2 = QLabel(self.statistics)
-        self.label_2.setGeometry(QRect(30, 290, 60, 40))
-        self.label_2.setLayoutDirection(Qt.LeftToRight)
-        self.label_2.setFrameShape(QFrame.StyledPanel)
-        self.label_2.setAlignment(Qt.AlignCenter)
-        self.label_2.setObjectName("label_5")
-        self.label_2.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_3 = QLabel(self.statistics)
-        self.label_3.setGeometry(QRect(30, 350, 60, 40))
-        self.label_3.setLayoutDirection(Qt.LeftToRight)
-        self.label_3.setFrameShape(QFrame.StyledPanel)
-        self.label_3.setAlignment(Qt.AlignCenter)
-        self.label_3.setObjectName("label_6")
-        self.label_3.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_4 = QLabel(self.statistics)
-        self.label_4.setGeometry(QRect(30, 410, 60, 40))
-        self.label_4.setLayoutDirection(Qt.LeftToRight)
-        self.label_4.setFrameShape(QFrame.StyledPanel)
-        self.label_4.setAlignment(Qt.AlignCenter)
-        self.label_4.setObjectName("label_7")
-        self.label_4.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_5 = QLabel(self.statistics)
-        self.label_5.setGeometry(QRect(30, 470, 60, 40))
-        self.label_5.setLayoutDirection(Qt.LeftToRight)
-        self.label_5.setFrameShape(QFrame.StyledPanel)
-        self.label_5.setAlignment(Qt.AlignCenter)
-        self.label_5.setObjectName("label_8")
-        self.label_5.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_6 = QLabel(self.statistics)
-        self.label_6.setGeometry(QRect(30, 530, 60, 40))
-        self.label_6.setLayoutDirection(Qt.LeftToRight)
-        self.label_6.setFrameShape(QFrame.StyledPanel)
-        self.label_6.setAlignment(Qt.AlignCenter)
-        self.label_6.setObjectName("label_9")
-        self.label_6.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.label_7 = QLabel(self.statistics)
-        self.label_7.setGeometry(QRect(30, 590, 60, 40))
-        self.label_7.setLayoutDirection(Qt.LeftToRight)
-        self.label_7.setFrameShape(QFrame.StyledPanel)
-        self.label_7.setAlignment(Qt.AlignCenter)
-        self.label_7.setObjectName("label_10")
-        self.label_7.setStyleSheet(
-"    background: rgb(255, 255, 255);\n"
-)
-        self.progressBar_1 = QProgressBar(self.statistics)
-        self.progressBar_1.setGeometry(QRect(110, 240, 800, 20))
-        self.progressBar_1.setMaximum(2400)
-        self.progressBar_1.setProperty("value", 439)
-        self.progressBar_1.setObjectName("progressBar")
-        self.progressBar_2 = QProgressBar(self.statistics)
-        self.progressBar_2.setGeometry(QRect(110, 300, 800, 20))
-        self.progressBar_2.setMaximum(2400)
-        self.progressBar_2.setProperty("value", 659)
-        self.progressBar_2.setObjectName("progressBar_2")
-        self.progressBar_3 = QProgressBar(self.statistics)
-        self.progressBar_3.setGeometry(QRect(110, 360, 800, 20))
-        self.progressBar_3.setMaximum(2400)
-        self.progressBar_3.setProperty("value", 420)
-        self.progressBar_3.setObjectName("progressBar_3")
-        self.progressBar_4 = QProgressBar(self.statistics)
-        self.progressBar_4.setGeometry(QRect(110, 420, 800, 20))
-        self.progressBar_4.setMaximum(2400)
-        self.progressBar_4.setProperty("value", 429)
-        self.progressBar_4.setObjectName("progressBar_4")
-        self.progressBar_5 = QProgressBar(self.statistics)
-        self.progressBar_5.setGeometry(QRect(110, 480, 800, 20))
-        self.progressBar_5.setMaximum(2400)
-        self.progressBar_5.setProperty("value", 310)
-        self.progressBar_5.setObjectName("progressBar_5")
-        self.progressBar_6 = QProgressBar(self.statistics)
-        self.progressBar_6.setGeometry(QRect(110, 540, 800, 20))
-        self.progressBar_6.setMaximum(2400)
-        self.progressBar_6.setProperty("value", 549)
-        self.progressBar_6.setObjectName("progressBar_6")
-        self.progressBar_7 = QProgressBar(self.statistics)
-        self.progressBar_7.setGeometry(QRect(110, 600, 800, 20))
-        self.progressBar_7.setMaximum(2400)
-        self.progressBar_7.setProperty("value", 422)
-        self.progressBar_7.setObjectName("progressBar_7")
+        self.statisticsScrollAreaWidget = QWidget()
+        self.statisticsScrollAreaWidget.setObjectName("statisticsList")
+
+        self.statisticsVerticalLayout = QVBoxLayout(self.statisticsScrollAreaWidget)
+        self.statisticsVerticalLayout.setObjectName('statisticsVerticalLayout')
+
+        self.statistic_1 = StatisticWithLabel(labelText='Januari')
+        self.statistic_2 = StatisticWithLabel(labelText='Februari')
+        self.statistic_3 = StatisticWithLabel(labelText='Maret')
+        self.statistic_4 = StatisticWithLabel(labelText='April')
+        self.statistic_5 = StatisticWithLabel(labelText='Mei')
+        self.statistic_6 = StatisticWithLabel(labelText='Juni')
+        self.statistic_7 = StatisticWithLabel(labelText='Juli')
+        self.statistic_8 = StatisticWithLabel(labelText='Agustus')
+        self.statistic_9 = StatisticWithLabel(labelText='September')
+        self.statistic_10 = StatisticWithLabel(labelText='Oktober')
+        self.statistic_11 = StatisticWithLabel(labelText='November')
+        self.statistic_12 = StatisticWithLabel(labelText='Desember')
+
+        self.statisticsList = [self.statistic_1, 
+                               self.statistic_2,
+                               self.statistic_3,
+                               self.statistic_4, 
+                               self.statistic_5,
+                               self.statistic_6,
+                               self.statistic_7, 
+                               self.statistic_8,
+                               self.statistic_9,
+                               self.statistic_10, 
+                               self.statistic_11,
+                               self.statistic_12,]
+        
+        self.updateStatistics()
+
+        for x in self.statisticsList:
+            self.statisticsVerticalLayout.addLayout(x)
+
+        self.statisticsScrollArea.setWidget(self.statisticsScrollAreaWidget)
+        
         self.statistics.hide()
 
         self.retranslateUi(Form)
@@ -432,6 +393,15 @@ class JurnalForm(UIWindow):
         self.entries += 1
         self.scrollAreaHeight = min(726, self.entries * 70)
         self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
+        self.updateStatistics()
+
+    def updateStatistics(self):
+        year = int(self.pageDetail.text())
+        freq = self.controller.getFrequencyArray(year)
+        for i in range(len(self.statisticsList)):
+            self.statisticsList[i].bar.setMaximum(monthrange(year, i+1)[1])
+            self.statisticsList[i].bar.setValue(freq[i])
+            self.statisticsList[i].refreshBar()
 
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
@@ -441,23 +411,8 @@ class JurnalForm(UIWindow):
         self.ReturnButton.setText(_translate("Form", "Kembali"))
         self.StatisticsButton.setText(_translate("Form", "Statistik"))
         self.addButton.setText(_translate("Form", "     +          Tambah Jurnal Baru"))
-        self.statsAvg.setText(_translate("Form", "Rata - rata tidur: 5.39 jam"))
-        self.label_1.setText(_translate("Form", "Sun"))
-        self.label_2.setText(_translate("Form", "Sat"))
-        self.label_3.setText(_translate("Form", "Fri"))
-        self.label_4.setText(_translate("Form", "Thu"))
-        self.label_5.setText(_translate("Form", "Wed"))
-        self.label_6.setText(_translate("Form", "Tue"))
-        self.label_7.setText(_translate("Form", "Mon"))
-        self.progressBar_1.setFormat(_translate("Form", "%p%"))
-        self.progressBar_2.setFormat(_translate("Form", "%p%"))
-        self.progressBar_3.setFormat(_translate("Form", "%p%"))
-        self.progressBar_4.setFormat(_translate("Form", "%p%"))
-        self.progressBar_5.setFormat(_translate("Form", "%p%"))
-        self.progressBar_6.setFormat(_translate("Form", "%p%"))
 
     def _onStatistics(self):
-        #TODO: Statistics
         if self.mode == "List":
             self.mode = "Statistic"
             self.horizontalLayout.replaceWidget(self.content, self.statistics)
