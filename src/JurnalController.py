@@ -7,7 +7,7 @@ class JurnalController:
     def __init__(self) -> None:
         self.abspath = path.dirname(path.abspath(__file__))
 
-        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"../database.db"))
         self.cursor = self.conn.cursor()
 
         self.cursor.execute("""
@@ -35,7 +35,7 @@ class JurnalController:
             func(x)
 
     def checkToday(self):
-        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"../database.db"))
         self.cursor = self.conn.cursor()
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -50,7 +50,7 @@ class JurnalController:
         self.conn.close()
 
     def getFrequencyArray(self, year):
-        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"../database.db"))
         self.cursor = self.conn.cursor()
         
         self.cursor.execute("""
@@ -73,14 +73,14 @@ class JurnalController:
         
     def addJurnal(self, judul, isi, waktuEdit = None):
         newJurnal = Jurnal.Jurnal(None, judul, isi, waktuEdit)
-        self.conn = sqlite3.connect(path.join(self.abspath,"database.db"))
+        self.conn = sqlite3.connect(path.join(self.abspath,"../database.db"))
         newJurnal.insert_to_database(self.conn.cursor())
         self.daftarJurnal.append(newJurnal)
         self.conn.commit()
         self.conn.close()
 
     def clearDB(self):
-        conn = sqlite3.connect(path.join(self.abspath, 'database.db'))
+        conn = sqlite3.connect(path.join(self.abspath, '../database.db'))
         conn.execute('DELETE FROM quotes')
         conn.commit()
         conn.close()
