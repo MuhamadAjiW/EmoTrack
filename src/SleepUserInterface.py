@@ -12,18 +12,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from custom import *
-import Jurnal as Jurnal
-from JurnalController import JurnalController
-#TODO: Controller
+import Sleep as Sleep
+from SleepController import SleepController
+import datetime
 from os import path
 import sys
 
 class SleepOverlay(CustomOverlay):
-    #TODO: Overlay
-    def __init__(self, codeIdx, controller, parent=None):
+    def __init__(self, controller, parent=None):
         super(SleepOverlay, self).__init__(parent)
         self.controller = controller
-        self.codeIdx = codeIdx
     
         self.block = QFrame(self)
         self.block.setFrameShape(QFrame.StyledPanel)
@@ -33,60 +31,54 @@ class SleepOverlay(CustomOverlay):
                                 "border-style: solid;"
                                 )
         self.block.move(300, 100)
-        self.block.resize(600, 480)
+        self.block.resize(600, 240)
 
         font = QFont()
         font.setFamily("Helvetica")
         font.setPointSize(13)
 
-        self.titleLabel = QLabel("Judul: ", self.block)
+        self.titleLabel = QLabel("Waktu Tidur: ", self.block)
         self.titleLabel.setStyleSheet("border-width: 0;")
         self.titleLabel.move(10,15)
         self.titleLabel.setContentsMargins(5, 0, 0, 0)
         self.titleLabel.setFont(font)
         
-        self.titleInput = QLineEdit(self.block)
-        self.titleInput.setGeometry(10,45, 580, 40)
-        self.titleInput.setContentsMargins(5, 0, 0, 0)
-        self.titleInput.setFont(font)
-
-        self.titleLabel = QLabel("Isi: ", self.block)
+        self.sleepInput = QDateTimeEdit(self.block)
+        self.sleepInput.setGeometry(10,45, 580, 40)
+        self.sleepInput.setContentsMargins(5, 0, 0, 0)
+        self.sleepInput.setFont(font)
+        self.sleepInput.setDateTime(QDateTime.currentDateTime())
+        self.sleepInput.setDisplayFormat("dd/MM/yyyy HH:mm:ss")
+        
+        self.titleLabel = QLabel("Waktu Bangun: ", self.block)
         self.titleLabel.setStyleSheet("border-width: 0;")
         self.titleLabel.move(10, 105)
         self.titleLabel.setContentsMargins(5, 0, 0, 0)
         self.titleLabel.setFont(font)
         
-        self.jurnalInput = QTextEdit(self.block)
-        self.jurnalInput.setGeometry(15,135, 575, 290)
-        self.jurnalInput.setContentsMargins(5, 0, 0, 0)
-        self.jurnalInput.setFont(font)
-
-        if (codeIdx != 0):
-            rows = self.controller.daftarJurnal
-            self.titleInput.setText(rows[codeIdx - 1].judul)
-            self.jurnalInput.setText(rows[codeIdx - 1].isi)
-            self.titleInput.setReadOnly(True)
-            self.jurnalInput.setReadOnly(True)
+        self.wakeInput = QDateTimeEdit(self.block)
+        self.wakeInput.setGeometry(10,135, 580, 40)
+        self.wakeInput.setContentsMargins(5, 0, 0, 0)
+        self.wakeInput.setFont(font)
+        self.wakeInput.setDateTime(QDateTime.currentDateTime())
+        self.wakeInput.setDisplayFormat("dd/MM/yyyy HH:mm:ss")
 
         self.closeButton = CustomSVGButton(path.join(self.resources, "cancelIcon.svg"), path.join(self.resources, "cancelIconH.svg"), self.block)
-        self.closeButton.setGeometry(QRect(525, 434, 23, 23))
+        self.closeButton.setGeometry(QRect(525, 200, 23, 23))
         self.closeButton.setObjectName("CloseButton")
         self.closeButton.clicked.connect(self._onclose)
 
         self.confirmButton = CustomSVGButton(path.join(self.resources, "confirmIcon.svg"), path.join(self.resources, "confirmIconH.svg"), self.block)
-        self.confirmButton.setGeometry(QRect(565, 434, 23, 23))
+        self.confirmButton.setGeometry(QRect(565, 200, 23, 23))
         self.confirmButton.setObjectName("ConfirmButton")
         self.confirmButton.clicked.connect(self._onconfirm)
 
     def _onconfirm(self):
-        if(self.codeIdx == 0):
-            self.signals.confirm.emit(self.codeIdx)
-        else:
-            self.signals.close.emit()
+        self.signals.confirm.emit(0)
 
 class SleepForm(UIWindow):
     def setupUi(self, Form):
-        self.controller = JurnalController()
+        self.controller = SleepController()
 
         self.parent = Form
         self.entries = 1
@@ -270,7 +262,7 @@ class SleepForm(UIWindow):
         self.addButton = QPushButton(self.content)
         self.addButton.setObjectName("pushButton")
         self.addButton.setFont(font)
-        self.addButton.clicked.connect(lambda: self._onpopup(0))
+        self.addButton.clicked.connect(lambda: self._onpopup())
 
         self.list.addWidget(self.addButton)
 
@@ -306,7 +298,7 @@ class SleepForm(UIWindow):
 "}")
 
         self.statsAvg = QLabel(self.statistics)
-        self.statsAvg.setGeometry(QRect(30, 160, 321, 61))
+        self.statsAvg.setGeometry(QRect(30, 160, 500, 61))
         self.statsAvg.setFont(font)
         self.statsAvg.setFrameShape(QFrame.NoFrame)
         self.statsAvg.setFrameShadow(QFrame.Plain)
@@ -412,21 +404,23 @@ class SleepForm(UIWindow):
         self.statistics.hide()
 
         self.retranslateUi(Form)
-        #TODO: get statistics
+        self.controller.foreach(self.addSleep)
+        # TODO display sleep
         QMetaObject.connectSlotsByName(Form)
 
-    def addJurnal(self, jurnal: Jurnal.Jurnal):
+    def addSleep(self, sleep: Sleep.Sleep):
         #TODO: sleep data
         _translate = QCoreApplication.translate
         font = QFont()
         font.setFamily("Helvetica")
         font.setPointSize(13)
 
-        exec("self.entry%d = QPushButton(self.content)" % self.entries)
+        exec("self.entry%d = QLabel(self.content)" % self.entries) # TODO : ganti jangan push button
+        exec("self.entry%d.setFrameShape(QFrame.StyledPanel)" % self.entries)
+        exec("self.entry%d.setStyleSheet('background: rgb(255, 255, 255)')" % self.entries)
         exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
         exec("self.list.insertWidget(1, self.entry%d)" % self.entries)
-        exec("self.entry%d.setText(_translate('Form', '     %s | %s'))" % (self.entries, jurnal.waktuEdit, jurnal.judul))
-        exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
+        exec("self.entry%d.setText(_translate('Form', '     %s - %s'))" % (self.entries, sleep.waktu_tidur, sleep.waktu_bangun))
         exec("self.entry%d.setFont(font)" % self.entries)
 
         self.entries += 1
@@ -449,32 +443,69 @@ class SleepForm(UIWindow):
         self.label_5.setText(_translate("Form", "Wed"))
         self.label_6.setText(_translate("Form", "Tue"))
         self.label_7.setText(_translate("Form", "Mon"))
-        self.progressBar_1.setFormat(_translate("Form", "%p%"))
-        self.progressBar_2.setFormat(_translate("Form", "%p%"))
-        self.progressBar_3.setFormat(_translate("Form", "%p%"))
-        self.progressBar_4.setFormat(_translate("Form", "%p%"))
-        self.progressBar_5.setFormat(_translate("Form", "%p%"))
-        self.progressBar_6.setFormat(_translate("Form", "%p%"))
+        self.progressBar_1.setFormat(_translate("Form", "%p"))
+        self.progressBar_2.setFormat(_translate("Form", "%p"))
+        self.progressBar_3.setFormat(_translate("Form", "%p"))
+        self.progressBar_4.setFormat(_translate("Form", "%p"))
+        self.progressBar_5.setFormat(_translate("Form", "%p"))
+        self.progressBar_6.setFormat(_translate("Form", "%p"))
+        self.progressBar_7.setFormat(_translate("Form", "%p"))
 
+    def _progressbarFormating(form, duration):
+        duration = int(duration)
+        hours = duration // 3600
+        minutes = (duration // 60) % 60
+        return f"{hours:02d}:{minutes:02d}"
+
+    def _updateStatistics(self):
+        #TODO: get statistics, testing
+        _translate = QCoreApplication.translate
+        recent_sleep = self.controller.get_sleep_recent_duration()
+        if(len(recent_sleep) == 0):
+            self.statsAvg.setText(_translate("Form", "Rata - rata tidur: 0 jam 0 menit 0 detik"))
+        else:
+            self.mode = "Statistic"
+            sleep_duration = sum(duration for (duration, day) in recent_sleep)
+            avg = sleep_duration / len(recent_sleep)
+            avg_second = avg % 60
+            avg_minute = (avg // 60) % 60
+            avg_hour = avg // 3600
+            self.statsAvg.setText(_translate("Form", "Rata - rata tidur: %d jam %d menit %d detik" % (avg_hour, avg_minute, avg_second)))
+
+        day_enum = {}
+        maximum_duration = max(duration for duration, day in recent_sleep)
+        for i in range(1, 8):
+            day_str = '0%d-04-2023' % (10-i)
+            day_datetime = datetime.datetime.strptime(day_str, '%d-%m-%Y').date()
+            day_abbrevation = day_datetime.strftime('%a')
+            day_enum[day_abbrevation] = i
+            exec('self.progressBar_%d.setProperty("value", %d)' % (i, 0))
+            exec('self.progressBar_%d.setMaximum(%d)' % (i, maximum_duration))
+            exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (i, self._progressbarFormating(0)))
+
+        for duration, day in recent_sleep:
+            exec('self.progressBar_%d.setProperty("value", %d)' % (day_enum[day], duration))
+            exec('self.progressBar_%d.setFormat(_translate("Form", "%s"))' % (day_enum[day], self._progressbarFormating(duration)))
+        
     def _onStatistics(self):
         if self.mode == "List":
             self.mode = "Statistic"
             self.horizontalLayout.replaceWidget(self.content, self.statistics)
             self.content.hide()
             self.statistics.show()
+            self._updateStatistics()
         else:
             self.mode = "List"
             self.horizontalLayout.replaceWidget(self.statistics, self.content)
             self.statistics.hide()
             self.content.show()
 
-    def _onpopup(self, codeIdx):
-        self.popup = SleepOverlay(codeIdx, self.controller, self.parent)
+    def _onpopup(self):
+        self.popup = SleepOverlay(self.controller, self.parent)
         self.popup.move(0, 0)
         self.popup.resize(self.parent.width(), self.parent.height())
         self.popup.signals.close.connect(self._closepopup)
         self.popup.signals.confirm.connect(self._onconfirm)
-        self.popup.codeIdx = codeIdx
         self.popup.show()
 
     def _closepopup(self):
@@ -482,6 +513,16 @@ class SleepForm(UIWindow):
 
     def _onconfirm(self):
         #TODO: Sleep Data
+        self.controller.insert_sleep(self.popup.sleepInput.dateTime().toPyDateTime().strftime('%d/%m/%Y %H:%M:%S'), 
+                                     self.popup.wakeInput.dateTime().toPyDateTime().strftime('%d/%m/%Y %H:%M:%S'))
+        
+        for i in range(1, self.entries):
+            exec("self.entry%d.deleteLater()" % i)
+
+        self.entries = 1
+        self.controller.foreach(self.addSleep)
+        self.scrollAreaHeight = min(726, self.entries * 70)
+        self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
         self.popup.close()
         
 if __name__ == "__main__":
