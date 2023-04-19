@@ -35,7 +35,7 @@ class UserInterface(QMainWindow):
         self.currentUI = self.view
         self.setCentralWidget(self.view)
 
-if __name__ == "__main__":
+def openApp():
     abspath = path.dirname(path.abspath(__file__))
     app = QApplication(sys.argv)
     
@@ -57,4 +57,7 @@ if __name__ == "__main__":
 
     mainWindow.show()
     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    openApp()
 
