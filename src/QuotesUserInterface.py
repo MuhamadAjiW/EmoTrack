@@ -72,7 +72,19 @@ class QuotesForm(UIWindow):
         exec("self.entry%d = QPushButton(self.content)" % self.entries)
         exec("self.entry%d.setObjectName('entry%d')" % (self.entries, self.entries))
         exec("self.list.insertWidget(1, self.entry%d)" % self.entries)
-        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("\n", "\\n     ")))
+
+        enter = quote.find('\n')
+        if enter == -1:
+            if len(quote) < 100:
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
+            else:
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+        else:
+            if enter < 100:
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
+            else:
+                exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+
         exec("self.entry%d.clicked.connect(lambda: self._onpopup(%d))" % (self.entries, self.entries), locals())
         exec("self.entry%d.setFont(font)" % self.entries)
 
@@ -301,10 +313,28 @@ class QuotesForm(UIWindow):
             self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
 
         else:
-            self.controller.editQuote(codeIdx-1, self.popup.quoteInput.toPlainText())
+            if self.controller.daftarQuotes[codeIdx-1].builtin == True:
+                msg = QMessageBox()
+                msg.setWindowTitle("Terjadi kesalahan!")
+                msg.setText(str("Quotes ini tidak diubah karena merupakan bawaan aplikasi"))
+                msg.setIcon(QMessageBox.Critical)
+                msg.exec_()
+            else:
+                self.controller.editQuote(codeIdx-1, self.popup.quoteInput.toPlainText())
 
-            _translate = QCoreApplication.translate
-            exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, self.popup.quoteInput.toPlainText().replace("\n", "\\n     ")))        
+                _translate = QCoreApplication.translate
+                quote = self.popup.quoteInput.toPlainText()
+                enter = quote.find('\n')
+                if enter == -1:
+                    if len(quote) < 100:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote))
+                    else:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))
+                else:
+                    if enter < 100:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:enter] + '...'))
+                    else:
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote[:100] + '...'))   
 
         self._closepopup()
 
@@ -319,6 +349,12 @@ class QuotesForm(UIWindow):
 
             self.scrollAreaHeight = min(726, self.entries * 70)
             self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
+        elif self.controller.daftarQuotes[codeIdx-1].builtin == True:
+            msg = QMessageBox()
+            msg.setWindowTitle("Terjadi kesalahan!")
+            msg.setText(str("Quotes ini tidak dapat dihapus karena merupakan bawaan aplikasi"))
+            msg.setIcon(QMessageBox.Critical)
+            msg.exec_()
 
         self._closepopup()
         

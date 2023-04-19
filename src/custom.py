@@ -34,6 +34,7 @@ class CustomOverlay(QWidget):
         self.setAttribute(Qt.WA_TranslucentBackground)
 
         self.fillColor = QColor(30, 30, 30, 120)
+        self.setFocus()
     
     def paintEvent(self, event):
         qp = QPainter()

@@ -20,6 +20,19 @@ class QuoteController:
         for entry in entries:
             self.daftarQuotes += [Quote.createFromTable(entry)]
 
+        if len(self.daftarQuotes) == 0:
+            self.addQuote("Kamu adalah orang yang paling aku sayangi", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Pendidikan adalah senjata paling ampuh yang bisa Anda gunakan untuk mengubah dunia\n\n-Nelson Mandela", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Saya tidak bisa mengubah arah angin, namun saya bisa menyesuaikan pelayaran saya untuk selalu menggapai tujuan saya\n\n-Jimmy Dean", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Setiap orang punya jatah gagal. Habiskan jatah gagalmu ketika kamu masih muda\n\n-Dahlan Iskan", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Hidupmu akan berubah ketika kebiasaanmu berubah\n\n-Jack Ma", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Usaha akan membuahkan hasil setelah seseorang tidak menyerah\n\n-Napoleon Hill", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Pikiran yang bercampur dengan kepastian, tujuan, ketekunan, dan keinginan yang membara adalah hal-hal yang kuat\n\n-Napoleon Hill", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Hiduplah selayaknya kamu akan mati esok. Belajarlah selayaknya kamu akan hidup selamanya\n\n-Mahatma Gandhi", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Di dalam kesulitan pasti ada kemudahan", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+            self.addQuote("Jangan malu dengan kegagalan, belajarlah darinya dan mulai lagi", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), True)
+        
+
         conn.close()
     
     def foreach(self, func):
