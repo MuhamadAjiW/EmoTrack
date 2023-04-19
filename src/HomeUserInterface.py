@@ -92,23 +92,21 @@ class HomeForm(UIWindow):
 "    background: rgb(200, 200, 200);\n"
 "}")
 
-        self.OpeningQuotes = QLabel(self.OpeningPanel)
-        self.OpeningQuotes.setGeometry(QRect(30, 128, 240, 40))
-        self.OpeningQuotes.setAlignment(Qt.AlignLeft|Qt.AlignTop)
-
-        self.NameLabel = QLabel(self.OpeningPanel)
-        self.NameLabel.setGeometry(QRect(30, 64, 240, 35))
         font = QFont()
         font.setFamily("Helvetica")
         font.setPointSize(22)
 
+        self.NameLabel = QLabel(self.OpeningPanel)
+        self.NameLabel.setGeometry(QRect(30, 64, 240, 35))
         self.NameLabel.setFont(font)
         self.NameLabel.setObjectName("NameLabel")
-        
-        font = QFont()
-        font.setFamily("Helvetica")
+
         font.setPointSize(13)
 
+        self.OpeningQuotes = QLabel(self.OpeningPanel)
+        self.OpeningQuotes.setGeometry(QRect(30, 128, 240, 500))
+        self.OpeningQuotes.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.OpeningQuotes.setWordWrap(True)
         self.OpeningQuotes.setFont(font)
         self.OpeningQuotes.setObjectName("OpeningQuotes")
 
