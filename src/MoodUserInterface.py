@@ -1,16 +1,16 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from MoodController import MoodController
 from custom import *
 from os import path
-import MoodController as MoodController
 import sys
 
 import datetime
 
 class MoodForm(UIWindow):
     def setupUi(self, Form):
-        self.controller = MoodController.MoodController()
+        self.controller = MoodController()
 
         Form.setObjectName("Mood Menu")
         Form.resize(1280, 786)
@@ -329,7 +329,7 @@ class MoodForm(UIWindow):
     def updateView(self):
         # Set current mood
         currentMood = self.controller.getCurrentMood()
-        if currentMood != "NULL":
+        if currentMood is not None:
             self.labelMoodSekarang.setText(currentMood)
 
         # Set progress bar
