@@ -72,6 +72,7 @@ class JurnalController:
         return freq
         
     def addJurnal(self, judul, isi, waktuEdit = None):
+        self.checkToday()
         newJurnal = Jurnal.Jurnal(None, judul, isi, waktuEdit)
         self.conn = sqlite3.connect(path.join(self.abspath,"../database.db"))
         newJurnal.insert_to_database(self.conn.cursor())
