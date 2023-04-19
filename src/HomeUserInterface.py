@@ -30,10 +30,15 @@ class HomeOverlay(CustomOverlay):
         font.setPointSize(13)
         self.renameLabel.setFont(font)
 
+        f = open(path.join(self.resources, "savedName.txt"), "r")
+
         self.nameInput = QLineEdit(self.block)
         self.nameInput.setGeometry(5,45, 580, 30)
         self.nameInput.setContentsMargins(5, 0, 0, 0)
         self.nameInput.setFont(font)
+        self.nameInput.setText(f.readline())
+
+        f.close()
 
         self.closeButton = CustomSVGButton(path.join(self.resources, "cancelIcon.svg"), path.join(self.resources, "cancelIconH.svg"), self.block)
         self.closeButton.setGeometry(QRect(523, 84, 23, 23))
@@ -44,7 +49,10 @@ class HomeOverlay(CustomOverlay):
         self.confirmButton.setObjectName("ConfirmButton")
 
         self.closeButton.clicked.connect(self._onclose)
-        #TODO: self.confirmButton.clicked.connect(self._onclose)
+        self.confirmButton.clicked.connect(self._onconfirm)
+    
+    def _onconfirm(self):
+        self.signals.confirm.emit(None)
 
 
 class HomeForm(UIWindow):
@@ -167,7 +175,12 @@ class HomeForm(UIWindow):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Home"))
         self.OpeningQuotes.setText(_translate("Form", self.controller.fetchRandom()))
-        self.NameLabel.setText(_translate("Form", "Hai Sayang"))
+
+        f = open(path.join(self.resources, "Resource/savedName.txt"), "r")
+
+        self.NameLabel.setText(_translate("Form", "Hai " + f.readline()))
+
+        f.close()
         self.QuitButton.setText(_translate("Form", "Keluar"))
 
     def _onpopup(self):
@@ -175,9 +188,18 @@ class HomeForm(UIWindow):
         self.popup.move(0, 0)
         self.popup.resize(self.parent.width(), self.parent.height())
         self.popup.signals.close.connect(self._closepopup)
+        self.popup.signals.confirm.connect(self._onconfirm)
         self.popup.show()
 
     def _closepopup(self):
+        self.popup.close()
+
+    def _onconfirm(self):
+        _translate = QCoreApplication.translate
+        f = open(path.join(self.resources, "Resource/savedName.txt"), "w")
+        f.write(self.popup.nameInput.text())
+        f.close()
+        self.NameLabel.setText(_translate("Form", "Hai " + self.popup.nameInput.text()))
         self.popup.close()
 
 

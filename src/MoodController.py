@@ -2,22 +2,20 @@ import os
 import sqlite3
 import datetime
 
-dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+from Mood import Mood
+
+dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 
 class MoodController:
-    def __init__(self) -> None:
+    def __init__(self):
         # Create database if it doesn't exist
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
 
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS mood(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                mood TEXT,
-                date DATE
-            );
-        """)
+        moodDB = Mood()
+        moodDB.create_table(self.cursor)
+        
         self.conn.commit()
         self.conn.close()
 
@@ -28,24 +26,20 @@ class MoodController:
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
 
-        latestDate = self.cursor.execute("""
-                        SELECT date FROM mood
-                        ORDER BY date DESC
-                        LIMIT 1
-                    """).fetchone()
+        moodDB = Mood()
+        latestDate = moodDB.get_latest_date(self.cursor)
+        
         if latestDate is None:
             return
         latestDatePlusOne = (datetime.datetime.strptime(
-            latestDate[0], "%Y-%m-%d") + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+            latestDate, "%Y-%m-%d") + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         tommorow = (datetime.datetime.strptime(today, "%Y-%m-%d") +
                     datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         while latestDatePlusOne != today and latestDatePlusOne != tommorow:
-            self.conn.execute("""
-                INSERT INTO mood(mood, date)
-                VALUES('NULL', '{0}')
-            """.format(latestDatePlusOne))
+            newMood = Mood("NULL", latestDatePlusOne)
+            newMood.insert_to_database(self.conn.cursor())
             self.conn.commit()
             latestDatePlusOne = (datetime.datetime.strptime(
                 latestDatePlusOne, "%Y-%m-%d") + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
@@ -54,26 +48,17 @@ class MoodController:
 
     def addMood(self, mood):
         # Add current mood to database
+        currentMood = self.getCurrentMood()
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
         today = datetime.datetime.now().strftime("%Y-%m-%d")
 
-        self.cursor.execute("""
-            SELECT * FROM mood
-            WHERE date = '{0}'
-        """.format(today))
-
-        if self.cursor.fetchone() is None:
-            self.conn.execute("""
-                INSERT INTO mood(mood, date)
-                VALUES('{0}', '{1}')
-            """.format(mood, today))
+        if currentMood is None:
+            newMood = Mood(mood, today)
+            newMood.insert_to_database(self.cursor)
         else:
-            self.conn.execute("""
-                UPDATE mood
-                SET mood = '{0}'
-                WHERE date = '{1}'
-            """.format(mood, today))
+            newMood = Mood(mood, today)
+            newMood.update_from_database(self.cursor)
         self.conn.commit()
         self.conn.close()
 
@@ -81,29 +66,21 @@ class MoodController:
         # Get current mood
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
-        today = datetime.datetime.now().strftime("%Y-%m-%d")
 
-        self.cursor.execute("""
-            SELECT mood FROM mood
-            WHERE date = '{0}'
-        """.format(today))
-        mood = self.cursor.fetchone()
+        moodDB = Mood()
+        mood = moodDB.get_current_mood(self.cursor)
+        
         self.conn.close()
-        if mood is None:
-            return "NULL"
-        return mood[0]
+        return mood
 
     def getRecentMoods(self):
         # Get last 30 days of moods
         self.conn = sqlite3.connect(os.path.join(dir, "database.db"))
         self.cursor = self.conn.cursor()
 
-        self.cursor.execute("""
-            SELECT mood, date FROM mood
-            ORDER BY date DESC
-            LIMIT 30
-        """)
-        moods = self.cursor.fetchall()
+        moodDB = Mood()
+        moods = moodDB.get_recent_moods(self.cursor)
+        
         self.conn.close()
         return moods
 
