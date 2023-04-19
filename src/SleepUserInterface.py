@@ -520,7 +520,6 @@ class SleepForm(UIWindow):
         self.popup.close()
 
     def _onconfirm(self):
-        #TODO: Sleep Data
         self.controller.insert_sleep(self.popup.sleepInput.dateTime().toPyDateTime().strftime('%d/%m/%Y %H:%M:%S'), 
                                      self.popup.wakeInput.dateTime().toPyDateTime().strftime('%d/%m/%Y %H:%M:%S'))
         
