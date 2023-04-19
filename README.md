@@ -54,6 +54,10 @@ EmoTrack merupakan aplikasi pencatat perasaan pada desktop. Fitur yang dimiliki 
         ```
 
 ### Menjalankan Program
+- clone repository ini dengan menjalankan
+    ```bash
+    git clone git@gitlab.informatika.org:Michaelu/if2250-2023-k01-3-emotrack.git
+    ```
 - buka command prompt dari root dan jalankan
     ```
     python src/main.py
