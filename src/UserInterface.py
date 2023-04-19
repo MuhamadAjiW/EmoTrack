@@ -12,6 +12,8 @@ from os import path
 class UserInterface(QMainWindow):
     def __init__(self, startView: UIWindow, views: dict, parent=None):
         super(UserInterface, self).__init__(parent)
+        self.setWindowIcon(QIcon(path.join(path.dirname(path.abspath(__file__)), "Resource/nameIcon.png")))
+        self.setWindowTitle("EmoTrack")
         self.setObjectName("UI Controller")
         self.setFixedSize(1280, 786)
 
