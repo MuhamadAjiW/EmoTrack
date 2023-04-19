@@ -3,20 +3,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from custom import *
 from os import path
+from QuoteController import QuoteController
 import sys
 
-class overlaySignals(QObject):
-    close = pyqtSignal()
-
-class customOverlay(QWidget):
+class HomeOverlay(CustomOverlay):
     def __init__(self, parent=None):
-        super(customOverlay, self).__init__(parent)
-        self.resources = path.dirname(path.abspath(__file__))
-
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-
-        self.fillColor = QColor(30, 30, 30, 120)
+        super(HomeOverlay, self).__init__(parent)
 
         self.block = QFrame(self)
         self.block.setFrameShape(QFrame.StyledPanel)
@@ -43,32 +35,21 @@ class customOverlay(QWidget):
         self.nameInput.setContentsMargins(5, 0, 0, 0)
         self.nameInput.setFont(font)
 
-        self.closeButton = customSVGButton(path.join(self.resources, "Resource/cancelIcon.svg"), path.join(self.resources, "Resource/cancelIconH.svg"), self.block)
+        self.closeButton = CustomSVGButton(path.join(self.resources, "cancelIcon.svg"), path.join(self.resources, "cancelIconH.svg"), self.block)
         self.closeButton.setGeometry(QRect(523, 84, 23, 23))
         self.closeButton.setObjectName("CloseButton")
 
-        self.confirmButton = customSVGButton(path.join(self.resources, "Resource/confirmIcon.svg"), path.join(self.resources, "Resource/confirmIconH.svg"), self.block)
+        self.confirmButton = CustomSVGButton(path.join(self.resources, "confirmIcon.svg"), path.join(self.resources, "confirmIconH.svg"), self.block)
         self.confirmButton.setGeometry(QRect(563, 84, 23, 23))
         self.confirmButton.setObjectName("ConfirmButton")
 
         self.closeButton.clicked.connect(self._onclose)
         #TODO: self.confirmButton.clicked.connect(self._onclose)
 
-        self.signals = overlaySignals()
 
-    def paintEvent(self, event):
-        qp = QPainter()
-        qp.begin(self)
-        qp.setBrush(self.fillColor)
-        qp.drawRect(0, 0, self.width(), self.height())
-        qp.end()
-
-    def _onclose(self):
-        self.signals.close.emit()
-
-
-class homeForm(UIWindow):
+class HomeForm(UIWindow):
     def setupUi(self, Form):
+        self.controller = QuoteController()
         self.parent = Form
         self.resources = path.dirname(path.abspath(__file__))
 
@@ -82,8 +63,15 @@ class homeForm(UIWindow):
         self.horizontalLayout.setObjectName("horizontalLayout")
 
         self.OpeningPanel = QFrame(Form)
-        self.OpeningPanel.setStyleSheet("QPushButton {\n"
-"    background: rgb(240, 240, 240);\n"
+        self.OpeningPanel.setObjectName("OpeningPanel")
+        self.OpeningPanel.setStyleSheet(
+"QFrame#OpeningPanel {\n"
+"    background: rgb(255, 255, 255);\n"
+"    border: 1px solid rgb(130, 130, 130);\n"
+"    border-radius: 0px;\n"
+"}"
+"QPushButton {\n"
+"    background: rgb(255, 255, 255);\n"
 "    border: 2px solid rgb(130, 130, 130);\n"
 "    border-width: 2px;\n"
 "    border-radius: 0px;\n"
@@ -95,10 +83,10 @@ class homeForm(UIWindow):
 "QPushButton:pressed {\n"
 "    background: rgb(200, 200, 200);\n"
 "}")
-        self.OpeningPanel.setObjectName("OpeningPanel")
 
         self.OpeningQuotes = QLabel(self.OpeningPanel)
         self.OpeningQuotes.setGeometry(QRect(30, 128, 240, 40))
+        self.OpeningQuotes.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
         self.NameLabel = QLabel(self.OpeningPanel)
         self.NameLabel.setGeometry(QRect(30, 64, 240, 35))
@@ -128,31 +116,29 @@ class homeForm(UIWindow):
         self.QuitButton.setDefault(False)
         self.QuitButton.setFlat(False)
         self.QuitButton.setObjectName("QuitButton")
-        self.QuitButton.text
         self.QuitButton.clicked.connect(sys.exit)
 
-        self.MoodButton = customSVGButton(path.join(self.resources, "Resource/moodIcon.svg"), path.join(self.resources, "Resource/moodIconH.svg"), self.OpeningPanel)
+        self.MoodButton = CustomSVGButton(path.join(self.resources, "Resource/moodIcon.svg"), path.join(self.resources, "Resource/moodIconH.svg"), self.OpeningPanel)
         self.MoodButton.setGeometry(QRect(30, 600, 40, 40))
         self.MoodButton.setObjectName("MoodButton")
-        self.MoodButton
         self.MoodButton.clicked.connect(lambda: self._onswitch("Mood"))
 
-        self.JournalButton = customSVGButton(path.join(self.resources, "Resource/journalIcon.svg"), path.join(self.resources, "Resource/journalIconH.svg"), self.OpeningPanel)
+        self.JournalButton = CustomSVGButton(path.join(self.resources, "Resource/journalIcon.svg"), path.join(self.resources, "Resource/journalIconH.svg"), self.OpeningPanel)
         self.JournalButton.setGeometry(QRect(80, 600, 40, 40))
         self.JournalButton.setObjectName("JournalButton")
         self.JournalButton.clicked.connect(lambda: self._onswitch("Journal"))
 
-        self.SleepButton = customSVGButton(path.join(self.resources, "Resource/sleepIcon.svg"), path.join(self.resources, "Resource/sleepIconH.svg"), self.OpeningPanel)
+        self.SleepButton = CustomSVGButton(path.join(self.resources, "Resource/sleepIcon.svg"), path.join(self.resources, "Resource/sleepIconH.svg"), self.OpeningPanel)
         self.SleepButton.setGeometry(QRect(130, 600, 40, 40))
         self.SleepButton.setObjectName("SleepButton")
         self.SleepButton.clicked.connect(lambda: self._onswitch("Sleep"))
         
-        self.QuotesButton = customSVGButton(path.join(self.resources, "Resource/quoteIcon.svg"), path.join(self.resources, "Resource/quoteIconH.svg"), self.OpeningPanel)
+        self.QuotesButton = CustomSVGButton(path.join(self.resources, "Resource/quoteIcon.svg"), path.join(self.resources, "Resource/quoteIconH.svg"), self.OpeningPanel)
         self.QuotesButton.setGeometry(QRect(180, 600, 40, 40))
         self.QuotesButton.setObjectName("QuotesButton")
         self.QuotesButton.clicked.connect(lambda: self._onswitch("Quotes"))
 
-        self.ChangeName = customSVGButton(path.join(self.resources, "Resource/nameIcon.svg"), path.join(self.resources, "Resource/nameIconH.svg"), self.OpeningPanel)
+        self.ChangeName = CustomSVGButton(path.join(self.resources, "Resource/nameIcon.svg"), path.join(self.resources, "Resource/nameIconH.svg"), self.OpeningPanel)
         self.ChangeName.setGeometry(QRect(250, 70, 30, 30))
         self.ChangeName.setObjectName("ChangeName")
         self.ChangeName.clicked.connect(self._onpopup)
@@ -163,7 +149,10 @@ class homeForm(UIWindow):
         self.ImagePanel.setFrameShape(QFrame.StyledPanel)
         self.ImagePanel.setLineWidth(6)
         self.ImagePanel.setObjectName("ImagePanel")
-        self.OpeningImage = customSVGImage(path.join(self.resources, "Resource/opening.svg"), self.ImagePanel)
+        self.ImagePanel.setStyleSheet(
+"    background: rgb(200, 200, 200);\n"
+)
+        self.OpeningImage = CustomSVGImage(path.join(self.resources, "Resource/opening.svg"), self.ImagePanel)
         self.OpeningImage.setGeometry(QRect(1, 1, 959, 790))
         self.OpeningImage.setObjectName("OpeningImage")
 
@@ -177,16 +166,12 @@ class homeForm(UIWindow):
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Home"))
-        self.OpeningQuotes.setText(_translate("Form", "Di dalam kesulitan pasti ada\n"
-"kemudahan"))
+        self.OpeningQuotes.setText(_translate("Form", self.controller.fetchRandom()))
         self.NameLabel.setText(_translate("Form", "Hai Sayang"))
         self.QuitButton.setText(_translate("Form", "Keluar"))
 
-    def _onswitch(self, dest):
-        self.signals.switch.emit(dest)
-
     def _onpopup(self):
-        self.popup = customOverlay(self.self.resources, self.parent)
+        self.popup = HomeOverlay(self.parent)
         self.popup.move(0, 0)
         self.popup.resize(self.parent.width(), self.parent.height())
         self.popup.signals.close.connect(self._closepopup)
@@ -202,7 +187,7 @@ if __name__ == "__main__":
     _id = QFontDatabase.addApplicationFont(path.join(homepath, "Resource/Helvetica/Helvetica.ttf"))    
 
     Widget = QWidget()
-    ui = homeForm()
+    ui = HomeForm()
     ui.setupUi(Widget)
 
     Widget.show()

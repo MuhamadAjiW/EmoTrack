@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'jurnal_tmp_1.ui'
+# Form implementation generated from reading ui file 'RiwayatTidurUserInterface.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.9
 #
@@ -14,10 +14,12 @@ from PyQt5.QtGui import *
 from custom import *
 import Jurnal as Jurnal
 from JurnalController import JurnalController
+#TODO: Controller
 from os import path
 import sys
 
 class SleepOverlay(CustomOverlay):
+    #TODO: Overlay
     def __init__(self, codeIdx, controller, parent=None):
         super(SleepOverlay, self).__init__(parent)
         self.controller = controller
@@ -82,8 +84,7 @@ class SleepOverlay(CustomOverlay):
         else:
             self.signals.close.emit()
 
-
-class JurnalForm(UIWindow):
+class SleepForm(UIWindow):
     def setupUi(self, Form):
         self.controller = JurnalController()
 
@@ -91,7 +92,7 @@ class JurnalForm(UIWindow):
         self.entries = 1
         self.mode = "List"
 
-        Form.setObjectName("FormJurnal")
+        Form.setObjectName("FormSleep")
         Form.resize(1280, 786)
         
         self.horizontalLayout = QHBoxLayout(Form)
@@ -125,21 +126,22 @@ class JurnalForm(UIWindow):
         font = QFont()
         font.setFamily("Helvetica")
         font.setPointSize(22)
+
         
-        self.JurnalTitle = QLabel(self.OpeningPanel)
-        self.JurnalTitle.setGeometry(QRect(30, 64, 240, 35))
-        self.JurnalTitle.setFont(font)
-        self.JurnalTitle.setObjectName("JurnalTitle")
-        self.JurnalTitle.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.SleepTitle = QLabel(self.OpeningPanel)
+        self.SleepTitle.setGeometry(QRect(30, 64, 240, 35))
+        self.SleepTitle.setFont(font)
+        self.SleepTitle.setObjectName("SleepTitle")
+        self.SleepTitle.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
         font.setPointSize(13)
     
-        self.JurnalSubtitle = QLabel(self.OpeningPanel)
-        self.JurnalSubtitle.setGeometry(QRect(30, 128, 240, 40))
-        self.JurnalSubtitle.setFont(font)
-        self.JurnalSubtitle.setWordWrap(True)
-        self.JurnalSubtitle.setObjectName("JurnalSubtitle")
-        self.JurnalSubtitle.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        self.SleepSubtitle = QLabel(self.OpeningPanel)
+        self.SleepSubtitle.setGeometry(QRect(30, 128, 240, 40))
+        self.SleepSubtitle.setFont(font)
+        self.SleepSubtitle.setWordWrap(True)
+        self.SleepSubtitle.setObjectName("SleepSubtitle")
+        self.SleepSubtitle.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
         self.ReturnButton = QPushButton(self.OpeningPanel)
         self.ReturnButton.setGeometry(QRect(30, 650, 190, 40))
@@ -167,6 +169,7 @@ class JurnalForm(UIWindow):
         self.StatisticsButton.setFlat(False)
         self.StatisticsButton.setObjectName("StatisticsButton")
         self.StatisticsButton.clicked.connect(self._onStatistics)
+        
         
         self.content = QFrame()
         self.content.setContentsMargins(40, 64, 20, -1)
@@ -277,11 +280,7 @@ class JurnalForm(UIWindow):
         self.horizontalLayout.addWidget(self.content)
         self.horizontalLayout.setStretch(0, 1)
         self.horizontalLayout.setStretch(1, 3)
-        
-        self.horizontalLayout.addWidget(self.OpeningPanel)
-        self.horizontalLayout.addWidget(self.content)
-        self.horizontalLayout.setStretch(0, 1)
-        self.horizontalLayout.setStretch(1, 3)
+
 
         self.statistics = QFrame(Form)
         self.statistics.setContentsMargins(40, 64, 20, -1)
@@ -413,10 +412,11 @@ class JurnalForm(UIWindow):
         self.statistics.hide()
 
         self.retranslateUi(Form)
-        self.controller.foreach(self.addJurnal)
+        #TODO: get statistics
         QMetaObject.connectSlotsByName(Form)
 
     def addJurnal(self, jurnal: Jurnal.Jurnal):
+        #TODO: sleep data
         _translate = QCoreApplication.translate
         font = QFont()
         font.setFamily("Helvetica")
@@ -436,11 +436,11 @@ class JurnalForm(UIWindow):
     def retranslateUi(self, Form):
         _translate = QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.JurnalSubtitle.setText(_translate("Form", "Apa yang kamu pikirkan hari ini?"))
-        self.JurnalTitle.setText(_translate("Form", "Jurnal"))
+        self.SleepSubtitle.setText(_translate("Form", "Seberapa lama kamu tidur hari ini?"))
+        self.SleepTitle.setText(_translate("Form", "Riwayat Tidur"))
         self.ReturnButton.setText(_translate("Form", "Kembali"))
         self.StatisticsButton.setText(_translate("Form", "Statistik"))
-        self.addButton.setText(_translate("Form", "     +          Tambah Jurnal Baru"))
+        self.addButton.setText(_translate("Form", "     +          Tambah Riwayat Tidur Baru"))
         self.statsAvg.setText(_translate("Form", "Rata - rata tidur: 5.39 jam"))
         self.label_1.setText(_translate("Form", "Sun"))
         self.label_2.setText(_translate("Form", "Sat"))
@@ -457,7 +457,6 @@ class JurnalForm(UIWindow):
         self.progressBar_6.setFormat(_translate("Form", "%p%"))
 
     def _onStatistics(self):
-        #TODO: Statistics
         if self.mode == "List":
             self.mode = "Statistic"
             self.horizontalLayout.replaceWidget(self.content, self.statistics)
@@ -482,31 +481,13 @@ class JurnalForm(UIWindow):
         self.popup.close()
 
     def _onconfirm(self):
-        try:
-            self.controller.checkToday()
-            self.controller.addJurnal(self.popup.titleInput.text(), self.popup.jurnalInput.toPlainText())
-            
-            for i in range(1, self.entries):
-                exec("self.entry%d.deleteLater()" % i)
-
-            self.entries = 1
-            self.controller.foreach(self.addJurnal)
-            self.scrollAreaHeight = min(726, self.entries * 70)
-            self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
-
-        except Exception as e:
-            msg = QMessageBox()
-            msg.setWindowTitle("Terjadi kesalahan!")
-            msg.setText(str(e))
-            msg.setIcon(QMessageBox.Critical)
-            msg.exec_()
-        
+        #TODO: Sleep Data
         self.popup.close()
-
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     Form = QWidget()
-    ui = JurnalForm()
+    ui = SleepForm()
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
