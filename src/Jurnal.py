@@ -18,12 +18,6 @@ class Jurnal:
         self.label.setText("{0} | {1}".format(self.waktuEdit, self.judul))
         self.label.mousePressEvent = self.show
         return self.label
-    
-    def show(self, event):
-        from JurnalCreateForm import Ui_NewJurnalWindow
-        self.ui = Ui_NewJurnalWindow(readOnly=True, jurnal=self)
-        self.ui.show()
-        pass
 
     def insert_to_database(self, cursor: sqlite3.Cursor):
         cursor.execute("""
@@ -32,4 +26,4 @@ class Jurnal:
         """.format(self.judul, self.isi, self.waktuEdit))
 
 def createFromTable(row):
-    return Jurnal(row[0], row[1], row[2], row[3])
+    return Jurnal(row[0], row[1], row[2]) if len(row) < 4 else Jurnal(row[0], row[1], row[2], row[3])
