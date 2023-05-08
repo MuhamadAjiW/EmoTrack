@@ -327,14 +327,14 @@ class QuotesForm(UIWindow):
                 enter = quote.find('\n')
                 if enter == -1:
                     if len(quote) < 100:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, quote.replace("'", "\\'").replace('"', '\\"')))
                     else:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))
                 else:
                     if enter < 100:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:enter] + '...'))
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, quote.replace("'", "\\'").replace('"', '\\"')[:enter] + '...'))
                     else:
-                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (self.entries, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))   
+                        exec("self.entry%d.setText(_translate('Form', '     %s'))" % (codeIdx, quote.replace("'", "\\'").replace('"', '\\"')[:100] + '...'))   
 
         self._closepopup()
 

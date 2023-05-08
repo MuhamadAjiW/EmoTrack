@@ -80,6 +80,16 @@ class JurnalController:
         self.conn.commit()
         self.conn.close()
 
+    def deleteJurnal(self, idx):
+        conn = sqlite3.connect(path.join(self.abspath, '../database.db'))
+        cursor = conn.execute('SELECT * FROM jurnal')
+        rows = cursor.fetchall()
+        id = rows[idx][0]
+        conn.execute('DELETE FROM jurnal WHERE id = ?', (id,))
+        del(self.daftarJurnal[idx])
+        conn.commit()
+        conn.close()
+
     def clearDB(self):
         conn = sqlite3.connect(path.join(self.abspath, '../database.db'))
         conn.execute('DELETE FROM quotes')
@@ -89,5 +99,6 @@ class JurnalController:
 
 if __name__ == '__main__':
     x = JurnalController()
+    x.clearDB()
 
 

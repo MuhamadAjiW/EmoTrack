@@ -82,3 +82,7 @@ class QuoteController:
         conn.execute('DELETE FROM quotes')
         conn.commit()
         conn.close()
+
+if __name__ == '__main__':
+    x = QuoteController
+    x.clearDB()

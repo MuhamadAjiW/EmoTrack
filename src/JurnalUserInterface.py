@@ -71,9 +71,14 @@ class SleepOverlay(CustomOverlay):
             self.jurnalInput.setReadOnly(True)
 
         self.closeButton = CustomSVGButton(path.join(self.resources, "cancelIcon.svg"), path.join(self.resources, "cancelIconH.svg"), self.block)
-        self.closeButton.setGeometry(QRect(525, 434, 23, 23))
+        self.closeButton.setGeometry(QRect(485, 434, 23, 23))
         self.closeButton.setObjectName("CloseButton")
         self.closeButton.clicked.connect(self._onclose)
+
+        self.deleteButton = CustomSVGButton(path.join(self.resources, "trashIcon.svg"), path.join(self.resources, "confirmIconH.svg"), self.block)
+        self.deleteButton.setGeometry(QRect(525, 434, 23, 23))
+        self.deleteButton.setObjectName("DeleteButton")
+        self.deleteButton.clicked.connect(self._ondelete)
 
         self.confirmButton = CustomSVGButton(path.join(self.resources, "confirmIcon.svg"), path.join(self.resources, "confirmIconH.svg"), self.block)
         self.confirmButton.setGeometry(QRect(565, 434, 23, 23))
@@ -83,6 +88,12 @@ class SleepOverlay(CustomOverlay):
     def _onconfirm(self):
         if(self.codeIdx == 0):
             self.signals.confirm.emit(self.codeIdx)
+        else:
+            self.signals.close.emit()
+
+    def _ondelete(self):
+        if(self.codeIdx != 0):
+            self.signals.delete.emit(self.codeIdx)
         else:
             self.signals.close.emit()
 
@@ -430,6 +441,7 @@ class JurnalForm(UIWindow):
         self.popup.resize(self.parent.width(), self.parent.height())
         self.popup.signals.close.connect(self._closepopup)
         self.popup.signals.confirm.connect(self._onconfirm)
+        self.popup.signals.delete.connect(self._ondelete)
         self.popup.codeIdx = codeIdx
         self.popup.show()
 
@@ -457,6 +469,24 @@ class JurnalForm(UIWindow):
             msg.exec_()
         
         self.popup.close()
+
+    def _ondelete(self, codeIdx):
+        print("deleting")
+        if(codeIdx != 0):
+            print(codeIdx)
+            self.controller.deleteJurnal(codeIdx-1)
+
+            for i in range(1, self.entries):
+                exec("self.entry%d.deleteLater()" % i)
+            
+            self.entries = 1
+            for row in self.controller.daftarJurnal:
+                self.addJurnal(row)
+
+            self.scrollAreaHeight = min(726, self.entries * 70)
+            self.scrollArea.setGeometry(QRect(30, 30, 890, self.scrollAreaHeight))
+
+        self._closepopup()
 
 if __name__ == "__main__":
     abspath = path.join(path.dirname(path.abspath(__file__)), '../img')
